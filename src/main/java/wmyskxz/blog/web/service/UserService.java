@@ -1,5 +1,6 @@
 package wmyskxz.blog.web.service;
 
+import wmyskxz.blog.module.entity.User;
 import wmyskxz.blog.module.vo.UserInfoVo;
 
 /**
@@ -64,6 +65,14 @@ public interface UserService {
      */
     UserInfoVo getUserInfoByUserId(Long userId);
 
+    /**
+     * 登录 - 通过账户名查找用户信息
+     *
+     * @param name
+     * @return
+     */
+    User getUserByName(String name);
+
     //*********************** 用户操作类 ***************************
 
     /**
@@ -92,6 +101,7 @@ public interface UserService {
 
     /**
      * 取消点赞
+     *
      * @param userId
      * @param blogId
      */

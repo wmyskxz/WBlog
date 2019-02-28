@@ -1,5 +1,6 @@
 package wmyskxz.blog.module.entity;
 
+import javax.persistence.Transient;
 import java.util.Date;
 
 public class User {
@@ -32,6 +33,10 @@ public class User {
     private Date lastLoginTime;
 
     private Boolean status;
+
+    /** 登录ip */
+    @Transient
+    private String loginIpAddress;
 
     public User(Long id, String email, String name, String username, Date createTime, Date updateTime, String password, String salt, String avatar, String description, Integer followSize, Integer voteSize, Integer fanSize, Date lastLoginTime, Boolean status) {
         this.id = id;
@@ -173,5 +178,13 @@ public class User {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getLoginIpAddress() {
+        return loginIpAddress;
+    }
+
+    public void setLoginIpAddress(String loginIpAddress) {
+        this.loginIpAddress = loginIpAddress;
     }
 }

@@ -102,6 +102,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
+    public User getUserByName(String name) {
+        UserExample userExample = new UserExample();
+        userExample.or().andNameEqualTo(name);
+        return userMapper.selectByExample(userExample).get(0);
+    }
+
+    @Override
+    @Transactional// 开启事务
     public void follow(Long userAId, Long userBId) {
         // 1.创建相应的通知信息
         Notify notify = new Notify();
