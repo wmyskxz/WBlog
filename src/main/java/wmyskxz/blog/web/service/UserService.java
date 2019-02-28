@@ -73,6 +73,13 @@ public interface UserService {
      */
     User getUserByUsername(String username);
 
+    /**
+     * 更新用户最后登录时间
+     *
+     * @param user
+     */
+    void updateLastLoginTime(User user);
+
     //*********************** 用户操作类 ***************************
 
     /**

@@ -10,6 +10,7 @@ import wmyskxz.blog.util.ConstCode;
 import wmyskxz.blog.web.service.UserService;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * UserService实现类
@@ -106,6 +107,12 @@ public class UserServiceImpl implements UserService {
         UserExample userExample = new UserExample();
         userExample.or().andNameEqualTo(username);
         return userMapper.selectByExample(userExample).get(0);
+    }
+
+    @Override
+    public void updateLastLoginTime(User user) {
+        user.setLastLoginTime(new Date());// 设置为当前时间
+        userMapper.updateByPrimaryKey(user);
     }
 
     @Override
