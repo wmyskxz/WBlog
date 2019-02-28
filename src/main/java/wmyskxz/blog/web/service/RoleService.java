@@ -68,8 +68,8 @@ public interface RoleService {
     /**
      * 通过角色登录账号来查询相应的角色信息
      *
-     * @param name
+     * @param username
      * @return
      */
-    List<Role> getRolesByUserName(String name);
+    List<Role> getRolesByUsername(String username);
 }

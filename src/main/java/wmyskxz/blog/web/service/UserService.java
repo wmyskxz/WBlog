@@ -13,11 +13,11 @@ public interface UserService {
     /**
      * 注册新用户
      *
-     * @param name
+     * @param username
      * @param password
      * @param email
      */
-    void register(String name, String password, String email);
+    void register(String username, String password, String email);
 
     /**
      * 通过用户id删除用户
@@ -68,10 +68,10 @@ public interface UserService {
     /**
      * 登录 - 通过账户名查找用户信息
      *
-     * @param name
+     * @param username
      * @return
      */
-    User getUserByName(String name);
+    User getUserByUsername(String username);
 
     //*********************** 用户操作类 ***************************
 

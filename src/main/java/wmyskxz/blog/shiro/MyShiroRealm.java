@@ -59,7 +59,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
 
     /**
-     * 根据userId 清除当前session存在的用户的权限缓存
+     * 根据 userId 清除当前session 存在的用户的权限缓存
      *
      * @param userIds 已经修改了权限的userId
      */
@@ -79,8 +79,8 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         // 获取用户的输入的账号.
-        String name = (String) token.getPrincipal();
-        User user = userService.getUserByName(name);
+        String username = (String) token.getPrincipal();
+        User user = userService.getUserByUsername(username);
         if (user == null) {
             throw new UnknownAccountException();
         }
@@ -111,33 +111,34 @@ public class MyShiroRealm extends AuthorizingRealm {
     }
 
     /**
-     * 根据用户id获取所有spc
+     * 根据用户id 获取所有 spc
      *
      * @param userIds 已经修改了权限的userId
      */
     private List<SimplePrincipalCollection> getSpcListByUserIds(List<String> userIds) {
-        //获取所有session
+        // 获取所有session
         Collection<Session> sessions = redisSessionDAO.getActiveSessions();
-        //定义返回
+        // 定义返回
         List<SimplePrincipalCollection> list = new ArrayList<SimplePrincipalCollection>();
         for (Session session : sessions) {
-            //获取session登录信息。
+            // 获取session登录信息。
             Object obj = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
             if (null != obj && obj instanceof SimplePrincipalCollection) {
-                //强转
+                // 强转
                 SimplePrincipalCollection spc = (SimplePrincipalCollection) obj;
-                //判断用户，匹配用户ID。
+                // 判断用户，匹配用户ID。
                 obj = spc.getPrimaryPrincipal();
                 if (null != obj && obj instanceof User) {
                     User user = (User) obj;
                     System.out.println("user:" + user);
-                    //比较用户ID，符合即加入集合
+                    // 比较用户ID，符合即加入集合
                     if (null != user && userIds.contains(user.getId())) {
                         list.add(spc);
                     }
                 }
-            }
-        }
+            }   // end outer if
+        }   // end for
+
         return list;
     }
 }

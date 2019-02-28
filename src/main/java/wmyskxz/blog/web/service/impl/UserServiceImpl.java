@@ -33,11 +33,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
-    public void register(String name, String password, String email) {
+    public void register(String username, String password, String email) {
         User user = new User();
         user.setAvatar(ConstCode.DEFAULT_AVATAR);
-        user.setName(name);
-        user.setUsername(name);
+        user.setName(username);// 默认名字与登录账户相同
+        user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
     }
@@ -102,9 +102,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
-    public User getUserByName(String name) {
+    public User getUserByUsername(String username) {
         UserExample userExample = new UserExample();
-        userExample.or().andNameEqualTo(name);
+        userExample.or().andNameEqualTo(username);
         return userMapper.selectByExample(userExample).get(0);
     }
 
