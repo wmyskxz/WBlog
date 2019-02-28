@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wmyskxz.blog.module.dao.MessageMapper">
+  <resultMap id="BaseResultMap" type="wmyskxz.blog.module.entity.Message">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="notify_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="content" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="is_delete_by_sender" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="is_delete_by_recevier" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="sender_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="recevier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, create_time, notify_id, content, is_delete_by_sender, is_delete_by_recevier, 
+    sender_id, recevier_id
+  </sql>
+  <select id="selectByExample" parameterType="wmyskxz.blog.module.entity.MessageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="wmyskxz.blog.module.entity.MessageExample">
+    delete from message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="wmyskxz.blog.module.entity.Message">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into message (create_time, notify_id, content, 
+      is_delete_by_sender, is_delete_by_recevier, sender_id, 
+      recevier_id)
+    values (#{createTime,jdbcType=TIMESTAMP}, #{notifyId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, 
+      #{isDeleteBySender,jdbcType=BIT}, #{isDeleteByRecevier,jdbcType=BIT}, #{senderId,jdbcType=BIGINT}, 
+      #{recevierId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="wmyskxz.blog.module.entity.Message">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="notifyId != null">
+        notify_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="isDeleteBySender != null">
+        is_delete_by_sender,
+      </if>
+      <if test="isDeleteByRecevier != null">
+        is_delete_by_recevier,
+      </if>
+      <if test="senderId != null">
+        sender_id,
+      </if>
+      <if test="recevierId != null">
+        recevier_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notifyId != null">
+        #{notifyId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleteBySender != null">
+        #{isDeleteBySender,jdbcType=BIT},
+      </if>
+      <if test="isDeleteByRecevier != null">
+        #{isDeleteByRecevier,jdbcType=BIT},
+      </if>
+      <if test="senderId != null">
+        #{senderId,jdbcType=BIGINT},
+      </if>
+      <if test="recevierId != null">
+        #{recevierId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="wmyskxz.blog.module.entity.MessageExample" resultType="java.lang.Long">
+    select count(*) from message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update message
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.notifyId != null">
+        notify_id = #{record.notifyId,jdbcType=BIGINT},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDeleteBySender != null">
+        is_delete_by_sender = #{record.isDeleteBySender,jdbcType=BIT},
+      </if>
+      <if test="record.isDeleteByRecevier != null">
+        is_delete_by_recevier = #{record.isDeleteByRecevier,jdbcType=BIT},
+      </if>
+      <if test="record.senderId != null">
+        sender_id = #{record.senderId,jdbcType=BIGINT},
+      </if>
+      <if test="record.recevierId != null">
+        recevier_id = #{record.recevierId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update message
+    set id = #{record.id,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      notify_id = #{record.notifyId,jdbcType=BIGINT},
+      content = #{record.content,jdbcType=VARCHAR},
+      is_delete_by_sender = #{record.isDeleteBySender,jdbcType=BIT},
+      is_delete_by_recevier = #{record.isDeleteByRecevier,jdbcType=BIT},
+      sender_id = #{record.senderId,jdbcType=BIGINT},
+      recevier_id = #{record.recevierId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="wmyskxz.blog.module.entity.Message">
+    update message
+    <set>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notifyId != null">
+        notify_id = #{notifyId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleteBySender != null">
+        is_delete_by_sender = #{isDeleteBySender,jdbcType=BIT},
+      </if>
+      <if test="isDeleteByRecevier != null">
+        is_delete_by_recevier = #{isDeleteByRecevier,jdbcType=BIT},
+      </if>
+      <if test="senderId != null">
+        sender_id = #{senderId,jdbcType=BIGINT},
+      </if>
+      <if test="recevierId != null">
+        recevier_id = #{recevierId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="wmyskxz.blog.module.entity.Message">
+    update message
+    set create_time = #{createTime,jdbcType=TIMESTAMP},
+      notify_id = #{notifyId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      is_delete_by_sender = #{isDeleteBySender,jdbcType=BIT},
+      is_delete_by_recevier = #{isDeleteByRecevier,jdbcType=BIT},
+      sender_id = #{senderId,jdbcType=BIGINT},
+      recevier_id = #{recevierId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

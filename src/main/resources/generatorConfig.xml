@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!-- 避免生成重复代码的插件-->
+        <plugin type="wmyskxz.blog.util.OverIsMergeablePlugin"/>
+
+        <!-- 是否去除自动生成的代码中的注释 true：是 false：否-->
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库链接地址账号密码-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/test1"
+                        userId="root" password="root">
+        </jdbcConnection>
+        <!-- 默认 false，把 JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
+             为 true 时解析为 java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!-- 生成pojo类存放位置-->
+        <javaModelGenerator targetPackage="wmyskxz.blog.module.entity" targetProject="src/main/java">
+            <!-- enableSubPackages：是否让 schema 作为包的后缀-->
+            <property name="enableSubPackages" value="true"/>
+            <!-- trimStrings：从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true"/>
+            <!-- 是否对model添加 构造函数 -->
+            <property name="constructorBased" value="true"/>
+        </javaModelGenerator>
+        <!-- 生成xml映射文件存放位置-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!-- 生成mapper类存放位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="wmyskxz.blog.module.dao"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 配置需要生成的表格 -->
+        <table tableName="%">
+            <!-- MySQL配置 -->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <!-- 解决MyBatis大字段集成不好的问题-->
+            <columnOverride column="content_md" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <columnOverride column="content_html" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        </table>
+    </context>
+</generatorConfiguration>
