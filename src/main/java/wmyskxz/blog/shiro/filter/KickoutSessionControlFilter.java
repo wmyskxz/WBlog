@@ -23,7 +23,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @author superzheng
+ * Shiro模块参考引入自:https://gitee.com/supperzh/zb-shiro
+ *
+ * @author superzheng˚
  * @date 2018-07-18
  */
 public class KickoutSessionControlFilter extends AccessControlFilter {
