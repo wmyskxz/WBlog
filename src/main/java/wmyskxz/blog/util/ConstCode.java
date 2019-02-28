@@ -16,4 +16,5 @@ public class ConstCode {
 
     //********************** 默认配置 **********************
     public static final String DEFAULT_AVATAR = "xxxx";
+
 }
