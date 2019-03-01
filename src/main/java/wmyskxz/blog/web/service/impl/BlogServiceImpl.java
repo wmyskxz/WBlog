@@ -3,6 +3,7 @@ package wmyskxz.blog.web.service.impl;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.dao.BlogCategoryMapper;
@@ -24,6 +25,7 @@ import java.util.List;
  * @auth:wmyskxz
  * @date:2019/02/26 - 14:55
  */
+@Service
 public class BlogServiceImpl implements BlogService {
 
     @Autowired
