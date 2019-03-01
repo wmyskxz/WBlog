@@ -21,10 +21,6 @@ import wmyskxz.blog.shiro.MyShiroRealm;
 import wmyskxz.blog.shiro.ShiroService;
 import wmyskxz.blog.shiro.filter.KickoutSessionControlFilter;
 
-import javax.servlet.Filter;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Shiro配置类
  *
@@ -68,20 +64,21 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        // 登录url
-        shiroFilterFactoryBean.setLoginUrl("/login");
-        // 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-        // 未授权界面;
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error/403");
-        // 自定义拦截器
-        Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
-        // 限制同一帐号同时在线的个数。
-        filtersMap.put("kickout", kickoutSessionControlFilter());
-        shiroFilterFactoryBean.setFilters(filtersMap);
-        // 拦截器.
-        Map<String, String> filterChainDefinitionMap = shiroService.loadFilterChainDefinitions();
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        // 测试允许所有地址访问
+        // // 登录url
+        // shiroFilterFactoryBean.setLoginUrl("/login");
+        // // 登录成功后要跳转的链接
+        // shiroFilterFactoryBean.setSuccessUrl("/index");
+        // // 未授权界面;
+        // shiroFilterFactoryBean.setUnauthorizedUrl("/error/403");
+        // // 自定义拦截器
+        // Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
+        // // 限制同一帐号同时在线的个数。
+        // filtersMap.put("kickout", kickoutSessionControlFilter());
+        // shiroFilterFactoryBean.setFilters(filtersMap);
+        // // 拦截器.
+        // Map<String, String> filterChainDefinitionMap = shiroService.loadFilterChainDefinitions();
+        // shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
 
