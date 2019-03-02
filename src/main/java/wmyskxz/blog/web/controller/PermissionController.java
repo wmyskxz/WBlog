@@ -11,7 +11,7 @@ import wmyskxz.blog.module.vo.base.ResponseVo;
  * @date:2019/03/01 - 08:42
  */
 @Controller
-@RequestMapping("/apis")
+@RequestMapping("/apis/psermission")
 public class PermissionController {
     // 增加一个角色
     @PostMapping("/role")
