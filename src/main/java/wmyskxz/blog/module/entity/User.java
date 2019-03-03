@@ -1,11 +1,9 @@
 package wmyskxz.blog.module.entity;
 
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable {
-
+public class User {
     private Long id;
 
     private String email;
@@ -37,10 +35,11 @@ public class User implements Serializable {
     private Boolean status;
 
     /** 登录ip */
-    @Transient
-    private String loginIpAddress;
+    @Transient private String loginIpAddress;
 
-    public User(Long id, String email, String name, String username, Date createTime, Date updateTime, String password, String salt, String avatar, String description, Integer followSize, Integer voteSize, Integer fanSize, Date lastLoginTime, Boolean status) {
+    public User(Long id, String email, String name, String username, Date createTime, Date updateTime, String password,
+                String salt, String avatar, String description, Integer followSize, Integer voteSize, Integer fanSize,
+                Date lastLoginTime, Boolean status) {
         this.id = id;
         this.email = email;
         this.name = name;
