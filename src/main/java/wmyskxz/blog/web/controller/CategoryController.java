@@ -56,7 +56,6 @@ public class CategoryController {
     @ApiOperation("查询一个用户的所有分类")
     @GetMapping("/{userId}")
     public PageResultVo listAll(@PathVariable Long userId) {
-        return ResultUtil
-                .table(categoryService.listByUserId(userId), categoryService.countByUserId(userId));
+        return ResultUtil.table(categoryService.listByUserId(userId), categoryService.countByUserId(userId));
     }
 }

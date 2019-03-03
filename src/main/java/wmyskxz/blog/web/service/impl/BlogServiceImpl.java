@@ -188,15 +188,15 @@ public class BlogServiceImpl implements BlogService {
     public void add(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
 
         // 1.先把BlogInfo基础信息插入到表中
-        Long blogId = Long.valueOf(blogInfoMapper.insertSelective(blogInfo));
+        blogInfoMapper.insertSelective(blogInfo);
 
         // 2.给BlogContent设置id插入到表中
-        blogContent.setBlogId(blogId);
+        blogContent.setBlogId(blogInfo.getId());
         blogContentMapper.insertSelective(blogContent);
 
         // 3.拼接相关数据插入到BlogCategory表中
         BlogCategory blogCategory = new BlogCategory();
-        blogCategory.setBlogId(blogId);
+        blogCategory.setBlogId(blogInfo.getId());
         blogCategory.setCategoryId(categoryId);
         blogCategoryMapper.insertSelective(blogCategory);
     }
@@ -223,7 +223,21 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional// 开启事务
     public void update(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
+        // 1.更新BlogInfo信息
+        blogInfoMapper.updateByPrimaryKeySelective(blogInfo);
 
+        // 2.更新BlogContent信息
+        BlogContentExample blogContentExample = new BlogContentExample();
+        blogContentExample.or().andBlogIdEqualTo(blogInfo.getId());
+        blogContent.setId(blogContentMapper.selectByExample(blogContentExample).get(0).getId());
+        blogContentMapper.updateByPrimaryKeySelective(blogContent);
+
+        // 3.更新分类信息
+        BlogCategoryExample blogCategoryExample = new BlogCategoryExample();
+        blogCategoryExample.or().andBlogIdEqualTo(blogInfo.getId());
+        BlogCategory blogCategory = blogCategoryMapper.selectByExample(blogCategoryExample).get(0);
+        blogCategory.setCategoryId(categoryId);
+        blogCategoryMapper.updateByPrimaryKeySelective(blogCategory);
     }
 
     /**

@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
         notify.setSenderId(userId);
         notify.setRecevierId(blogInfoMapper.selectByPrimaryKey(blogId).getUserId());
         notify.setType(ConstCode.NOTIFY_COMMENT_TYPE);
-        Long notifyId = Long.valueOf(notifyMapper.insertSelective(notify));
+        notifyMapper.insertSelective(notify);
 
         // 2.创建对应的评论消息
         Comment comment = new Comment();
@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setBlogId(blogId);
         comment.setContent(content);
         comment.setAtId(atId);
-        comment.setNotifyId(notifyId);
+        comment.setNotifyId(notify.getId());
         commentMapper.insertSelective(comment);
     }
 
@@ -74,22 +74,22 @@ public class CommentServiceImpl implements CommentService {
         if (userId == blogerId) {
             // 如果是博主回复的
             notify.setRecevierId(atId);
-            Long notifyId = Long.valueOf(notifyMapper.insertSelective(notify));
+            notifyMapper.insertSelective(notify);
 
             // 2.创建对应的评论消息
-            comment.setNotifyId(notifyId);
+            comment.setNotifyId(notify.getId());
             commentMapper.insertSelective(comment);
         } else {
             // 如果是其他人回复其他人
             notify.setRecevierId(blogerId);
             // I.先给博主发送一份儿通知，创建相应评论消息
-            Long notifyId = Long.valueOf(notifyMapper.insertSelective(notify));
-            comment.setNotifyId(notifyId);
+            notifyMapper.insertSelective(notify);
+            comment.setNotifyId(notify.getId());
             commentMapper.insertSelective(comment);
             // II.再给被回复的人发一份儿通知，创建相应评论消息
             notify.setRecevierId(atId);
-            notifyId = Long.valueOf(notifyMapper.insertSelective(notify));
-            comment.setNotifyId(notifyId);
+            notifyMapper.insertSelective(notify);
+            comment.setNotifyId(notify.getId());
             commentMapper.insertSelective(comment);
         }   // end if:发送完了通知消息
     }

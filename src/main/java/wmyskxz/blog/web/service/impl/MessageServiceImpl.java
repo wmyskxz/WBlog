@@ -39,12 +39,12 @@ public class MessageServiceImpl implements MessageService {
         notify.setType(ConstCode.NOTIFY_MESSAGE_TYPE);
         notify.setSenderId(userId);
         notify.setRecevierId(receiverId);
-        Long notifyId = Long.valueOf(notifyMapper.insertSelective(notify));
+        notifyMapper.insertSelective(notify);
 
         // 2.再创建对应的Message私信消息
         Message message = new Message();
         message.setContent(content);
-        message.setNotifyId(notifyId);
+        message.setNotifyId(notify.getId());
         message.setSenderId(userId);
         message.setRecevierId(receiverId);
         messageMapper.insertSelective(message);

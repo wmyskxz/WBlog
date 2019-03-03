@@ -126,8 +126,7 @@ public class BlogController {
     public PageResultVo getBlogsByUserId(@PathVariable("userId") Long userId,
                                          @RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                          @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.listByUserId(userId, pageNum, pageSize),
-                                blogService.countByUserId(userId));
+        return ResultUtil.table(blogService.listByUserId(userId, pageNum, pageSize), blogService.countByUserId(userId));
     }
 
     // 获取某一个用户某个分类下的文章列表
