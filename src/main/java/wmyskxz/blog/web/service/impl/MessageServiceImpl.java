@@ -1,5 +1,6 @@
 package wmyskxz.blog.web.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.MessageMapper;
@@ -26,12 +27,9 @@ import java.util.*;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    @Resource
-    MessageMapper messageMapper;
-    @Resource
-    UserMapper userMapper;
-    @Resource
-    NotifyMapper notifyMapper;
+    @Resource MessageMapper messageMapper;
+    @Resource UserMapper userMapper;
+    @Resource NotifyMapper notifyMapper;
 
     @Override
     @Transactional// 开启事务
@@ -90,7 +88,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional// 开启事务
-    public List<MessageListVo> getMessageListByUserId(Long userId) {
+    public List<MessageListVo> listByUserId(Long userId) {
 
         List<MessageListVo> resultList = new LinkedList<>();
 
@@ -138,13 +136,15 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional// 开启事务
-    public List<MessageVo> getMessagesByUserIdAndConterpartId(Long userId, Long counterpartId) {
+    public List<MessageVo> listMessageListByUserIdAndConterpartId(Long userId, Long counterpartId, int pageNum,
+                                                                  int pageSize) {
 
         List<MessageVo> resultList = new LinkedList<>();
 
         MessageExample messageExample = new MessageExample();
         List idList = Arrays.asList(new Long[]{counterpartId, userId});
         messageExample.or().andSenderIdIn(idList).andRecevierIdIn(idList);
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行查询生效
         List<Message> messages = messageMapper.selectByExample(messageExample);
 
         User user = userMapper.selectByPrimaryKey(userId);
@@ -163,5 +163,16 @@ public class MessageServiceImpl implements MessageService {
         }   // end for
 
         return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long countByUserIdAndCounterpartId(Long userId, Long counterpartId) {
+        MessageExample messageExample = new MessageExample();
+        List idList = Arrays.asList(new Long[]{counterpartId, userId});
+        messageExample.or().andSenderIdIn(idList).andRecevierIdIn(idList);
+        Long count = messageMapper.countByExample(messageExample);
+
+        return count;
     }
 }

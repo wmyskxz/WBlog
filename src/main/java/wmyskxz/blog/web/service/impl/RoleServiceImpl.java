@@ -25,18 +25,14 @@ import java.util.Set;
  */
 @Service
 public class RoleServiceImpl implements RoleService {
-    @Resource
-    RoleMapper roleMapper;
-    @Resource
-    UserRoleMapper userRoleMapper;
-    @Resource
-    RolePermissionMapper rolePermissionMapper;
-    @Resource
-    PermissionMapper permissionMapper;
+    @Resource RoleMapper roleMapper;
+    @Resource UserRoleMapper userRoleMapper;
+    @Resource RolePermissionMapper rolePermissionMapper;
+    @Resource PermissionMapper permissionMapper;
 
     @Override
     @Transactional// 开启事务
-    public void addRole(String name, String description) {
+    public void add(String name, String description) {
         Role role = new Role();
         role.setName(name);
         role.setDescription(description);
@@ -45,7 +41,35 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public void deleteRoleByRoleName(String name) {
+    public void giveRole(Long userId, Long roleId) {
+        // 查询,用户已有该角色就不管,没有就添加上
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.or().andUserIdEqualTo(userId).andRoleIdEqualTo(roleId);
+        if (userRoleMapper.selectByExample(userRoleExample).isEmpty()) {
+            // 没有则添加
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(roleId);
+            userRoleMapper.insertSelective(userRole);
+        }   // end if
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public void giveRoles(Long userId, Long... roleIds) {
+        // 先删除所有的,然后再重新赋予
+        UserRoleExample userRoleExample;
+        for (Long roleId : roleIds) {
+            userRoleExample = new UserRoleExample();
+            userRoleExample.or().andUserIdEqualTo(userId).andRoleIdEqualTo(roleId);
+            userRoleMapper.deleteByExample(userRoleExample);
+            giveRole(userId, roleId);
+        }
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public void deleteByName(String name) {
         // 如果还有用户属于该角色则不允许删除
         RoleExample roleExample = new RoleExample();
         roleExample.or().andNameEqualTo(name);
@@ -69,7 +93,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public void deleteRoleByRoleId(Long roleId) {
+    public void deleteById(Long roleId) {
         // 如果还有用户属于该角色则不允许删除
         Role role = roleMapper.selectByPrimaryKey(roleId);
         UserRoleExample userRoleExample = new UserRoleExample();
@@ -91,15 +115,15 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public void deleteRolesByRoleId(Long... roleIds) {
+    public void deleteByIds(Long... roleIds) {
         for (Long roleId : roleIds) {
-            deleteRoleByRoleId(roleId);
+            deleteById(roleId);
         }   // end for
     }
 
     @Override
     @Transactional// 开启事务
-    public void updateRoleByRoleId(String name, String description, Long roleId) {
+    public void update(String name, String description, Long roleId) {
         Role role = new Role();
         role.setName(name);
         role.setDescription(description);
@@ -109,12 +133,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public List<Role> listAll() {
+    public List<Role> listAll(int pageNum, int pageSize) {
         List<Role> resultList = new LinkedList<>();
 
         RoleExample roleExample = new RoleExample();
         roleExample.or();// 无条件查询即查询所有
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次查询有效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次查询有效
         resultList = roleMapper.selectByExample(roleExample);
 
         return resultList;
@@ -122,7 +146,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public Set<String> getRolesByUserId(Long userId) {
+    public Set<String> listByUserId(Long userId) {
         Set<String> resultList = new LinkedHashSet<>();
 
         UserRoleExample userRoleExample = new UserRoleExample();
@@ -140,7 +164,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public List<Role> getRolesByUsername(String username) {
+    public List<Role> listByUsername(String username) {
         return null;
     }
 }

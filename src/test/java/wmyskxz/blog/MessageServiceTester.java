@@ -24,7 +24,7 @@ public class MessageServiceTester {
 
     @Test
     public void getMessageListByUserIdTester() {
-        List<MessageListVo> messageListVos = messageService.getMessageListByUserId(1L);
+        List<MessageListVo> messageListVos = messageService.listByUserId(1L);
         for (MessageListVo messageListVo : messageListVos) {
             System.out.println("Avatar:" + messageListVo.getAvatar());
             System.out.println("CounterpartId:" + messageListVo.getCounterpartId());

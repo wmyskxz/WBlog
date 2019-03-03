@@ -34,7 +34,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public Long getBlogsNumber() {
+    public Long countAll() {
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or();// 无条件查询即查询全部
         Long count = blogInfoMapper.countByExample(blogInfoExample);
@@ -43,7 +43,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public Long getBlogsNumberByUserId(Long userId) {
+    public Long countByUserId(Long userId) {
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andUserIdEqualTo(userId);
         Long count = blogInfoMapper.countByExample(blogInfoExample);
@@ -52,7 +52,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public Long getBlogsNumberByCategoryId(Long categoryId) {
+    public Long countByCategoryId(Long categoryId) {
         BlogCategoryExample blogCategoryExample = new BlogCategoryExample();
         blogCategoryExample.or().andCategoryIdEqualTo(categoryId);
         Long count = blogCategoryMapper.countByExample(blogCategoryExample);
@@ -61,7 +61,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> getNewestBlogs(int pageNum, int pageSize) {
+    public List<BlogListVo> listNewestBlogs(int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
@@ -78,7 +78,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> getHotestBlogs(int pageNum, int pageSize) {
+    public List<BlogListVo> listHotestBlogs(int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
@@ -95,7 +95,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> getRecommendBlogs(int pageNum, int pageSize) {
+    public List<BlogListVo> listRecommendBlogs(int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
@@ -112,7 +112,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogInfoVo> getRecommendBlogsByUserId(Long userId, int pageNum, int pageSize) {
+    public List<BlogInfoVo> listRecommendBlogsByUserId(Long userId, int pageNum, int pageSize) {
 
         List<BlogInfoVo> resultList = new LinkedList<>();
 
@@ -129,7 +129,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogInfoVo> getBlogsByUserId(Long userId, int pageNum, int pageSize) {
+    public List<BlogInfoVo> listByUserId(Long userId, int pageNum, int pageSize) {
         List<BlogInfoVo> resultList = new LinkedList<>();
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
@@ -145,7 +145,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogInfoVo> getBlogsByCategoryId(Long categoryId, int pageNum, int pageSize) {
+    public List<BlogInfoVo> listByCategoryId(Long categoryId, int pageNum, int pageSize) {
 
         List<BlogInfoVo> resultList = new LinkedList<>();
 
@@ -169,7 +169,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public BlogVo getBlogByBlogId(Long blogId) {
+    public BlogVo findById(Long blogId) {
 
         BlogVo resultObject = new BlogVo();
 
@@ -185,7 +185,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public void addBlog(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
+    public void add(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
 
         // 1.先把BlogInfo基础信息插入到表中
         Long blogId = Long.valueOf(blogInfoMapper.insertSelective(blogInfo));
@@ -203,7 +203,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public void deleteBlogByBlogId(Long blogId) {
+    public void deleteById(Long blogId) {
 
         // 1.先删除BlogInfo基础表中的相关内容
         blogInfoMapper.deleteByPrimaryKey(blogId);
@@ -222,7 +222,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public void updateBlog(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
+    public void update(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
 
     }
 

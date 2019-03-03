@@ -18,28 +18,44 @@ public interface RoleService {
      * @param name
      * @param description
      */
-    void addRole(String name, String description);
+    void add(String name, String description);
+
+    /**
+     * 给用户赋予一个角色
+     *
+     * @param userId
+     * @param roleId
+     */
+    void giveRole(Long userId, Long roleId);
+
+    /**
+     * 为用户赋予/删除多个角色
+     *
+     * @param userId
+     * @param roleIds
+     */
+    void giveRoles(Long userId, Long... roleIds);
 
     /**
      * 通过角色名称来删除角色信息
      *
      * @param name
      */
-    void deleteRoleByRoleName(String name);
+    void deleteByName(String name);
 
     /**
      * 通过角色id来删除角色信息
      *
      * @param roleId
      */
-    void deleteRoleByRoleId(Long roleId);
+    void deleteById(Long roleId);
 
     /**
      * 批量删除角色,通过ids
      *
      * @param roleIds
      */
-    void deleteRolesByRoleId(Long... roleIds);
+    void deleteByIds(Long... roleIds);
 
     /**
      * 更新角色信息
@@ -48,14 +64,16 @@ public interface RoleService {
      * @param description
      * @param roleId
      */
-    void updateRoleByRoleId(String name, String description, Long roleId);
+    void update(String name, String description, Long roleId);
 
     /**
      * 返回所有的角色信息
      *
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<Role> listAll();
+    List<Role> listAll(int pageNum, int pageSize);
 
     /**
      * 通过角色id来查询相应的角色信息
@@ -63,7 +81,7 @@ public interface RoleService {
      * @param userId
      * @return
      */
-    Set<String> getRolesByUserId(Long userId);
+    Set<String> listByUserId(Long userId);
 
     /**
      * 通过角色登录账号来查询相应的角色信息
@@ -71,5 +89,5 @@ public interface RoleService {
      * @param username
      * @return
      */
-    List<Role> getRolesByUsername(String username);
+    List<Role> listByUsername(String username);
 }

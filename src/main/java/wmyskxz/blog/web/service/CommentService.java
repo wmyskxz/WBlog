@@ -20,14 +20,25 @@ public interface CommentService {
      * @param content
      * @param atId
      */
-    void addComment(Long userId, Long blogId, String content, Long atId);
+    void add(Long userId, Long blogId, String content, Long atId);
+
+    /**
+     * 回复一条评论(登录之后)
+     *
+     * @param userId
+     * @param blogId
+     * @param content
+     * @param atId
+     * @param blogerId 博主id
+     */
+    void reply(Long userId, Long blogId, String content, Long atId, Long blogerId);
 
     /**
      * 通过commentId删除一条评论消息(默认权限只有博主才有)
      *
      * @param commentId
      */
-    void deleteCommentByCommentId(Long commentId);
+    void deleteById(Long commentId);
 
     /**
      * 博文页 - 获取一篇博文下面的评论列表
@@ -35,13 +46,23 @@ public interface CommentService {
      * @param blogId
      * @return
      */
-    List<CommentVo> getCommentsByBlogId(Long blogId);
+    List<CommentVo> listByBlogId(Long blogId);
 
     /**
      * 个人消息页 -  获取某一个用户的所有评论消息
      *
      * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<CommentVo> getCommentsByUserId(Long userId);
+    List<CommentVo> listByUserId(Long userId, int pageNum, int pageSize);
+
+    /**
+     * 查询一个用户的评论消息数
+     *
+     * @param userId
+     * @return
+     */
+    Long countByUserId(Long userId);
 }

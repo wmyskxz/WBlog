@@ -25,17 +25,28 @@ import java.util.Set;
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
-    @Resource
-    PermissionMapper permissionMapper;
-    @Resource
-    RolePermissionMapper rolePermissionMapper;
-    @Resource
-    UserRoleMapper userRoleMapper;
+    @Resource PermissionMapper permissionMapper;
+    @Resource RolePermissionMapper rolePermissionMapper;
+    @Resource UserRoleMapper userRoleMapper;
 
     @Override
     @Transactional// 开启事务
     public void add(Permission permission) {
         permissionMapper.insertSelective(permission);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public void givePermission(Long roleId, Long permissionId) {
+        RolePermissionExample rolePermissionExample = new RolePermissionExample();
+        rolePermissionExample.or().andRoleIdEqualTo(roleId).andPermissionIdEqualTo(permissionId);
+        if (rolePermissionMapper.selectByExample(rolePermissionExample).isEmpty()) {
+            // 如果没有则添加,有则不进行操作
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setRoleId(roleId);
+            rolePermission.setPermissionId(permissionId);
+            rolePermissionMapper.insertSelective(rolePermission);
+        }   // end if
     }
 
     @Override
@@ -52,7 +63,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     @Transactional// 开启事务
-    public void updateById(Permission permission, Long permissionId) {
+    public void update(Permission permission, Long permissionId) {
         permission.setId(permissionId);
         permissionMapper.updateByPrimaryKeySelective(permission);
     }

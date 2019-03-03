@@ -18,7 +18,7 @@ public interface NotifyService {
      * @param userId
      * @return
      */
-    NotifyVo getNotifiesByUserId(Long userId);
+    NotifyVo countByUserId(Long userId);
 
     /**
      * 个人消息页(关注页)
@@ -26,7 +26,7 @@ public interface NotifyService {
      * @param userId
      * @return
      */
-    List<UserFollowVo> getUserFollowsByUserId(Long userId);
+    List<UserFollowVo> listUserFollowsByUserId(Long userId);
 
     /**
      * 个人消息页(粉丝页)
@@ -34,5 +34,5 @@ public interface NotifyService {
      * @param userId
      * @return
      */
-    List<UserFollowVo> getUserFansByUserId(Long userId);
+    List<UserFollowVo> listUserFansByUserId(Long userId);
 }

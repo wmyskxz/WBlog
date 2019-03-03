@@ -1,5 +1,6 @@
 package wmyskxz.blog.web.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,10 +8,13 @@ import wmyskxz.blog.module.dao.*;
 import wmyskxz.blog.module.entity.*;
 import wmyskxz.blog.module.vo.UserInfoVo;
 import wmyskxz.blog.util.ConstCode;
+import wmyskxz.blog.util.PasswordHelper;
 import wmyskxz.blog.web.service.UserService;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * UserService实现类
@@ -21,16 +25,11 @@ import java.util.Date;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Resource
-    UserMapper userMapper;
-    @Resource
-    NotifyMapper notifyMapper;
-    @Resource
-    UserFollowMapper userFollowMapper;
-    @Resource
-    BlogInfoMapper blogInfoMapper;
-    @Resource
-    VoteMapper voteMapper;
+    @Resource UserMapper userMapper;
+    @Resource NotifyMapper notifyMapper;
+    @Resource UserFollowMapper userFollowMapper;
+    @Resource BlogInfoMapper blogInfoMapper;
+    @Resource VoteMapper voteMapper;
 
     @Override
     @Transactional// 开启事务
@@ -40,12 +39,14 @@ public class UserServiceImpl implements UserService {
         user.setName(username);// 默认名字与登录账户相同
         user.setUsername(username);
         user.setPassword(password);
+        PasswordHelper.encryptPassword(user);
         user.setEmail(email);
+        userMapper.insertSelective(user);
     }
 
     @Override
     @Transactional// 开启事务
-    public void deleteUserByUserId(Long userId) {
+    public void deleteByUserId(Long userId) {
         User user = new User();
         user.setStatus(false);
         UserExample userExample = new UserExample();
@@ -56,17 +57,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
-    public void deleteUsers(Long... userIds) {
+    public void deleteByUserIds(Long... userIds) {
         for (Long userId : userIds) {
-            deleteUserByUserId(userId);
+            deleteByUserId(userId);
         }   // end for
     }
 
     @Override
     @Transactional// 开启事务
-    public void updateUsernameByUserId(Long userId, String username) {
+    public void update(Long userId, String name, String password, String email) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        user.setName(name);
+        PasswordHelper.encryptPassword(user);
+        user.setEmail(email);
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public void updateUserNameById(Long userId, String name) {
         User user = new User();
-        user.setUsername(username);
+        user.setUsername(name);
         UserExample userExample = new UserExample();
         userExample.or().andIdEqualTo(userId);
         userMapper.updateByExampleSelective(user, userExample);
@@ -74,9 +85,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
-    public void updateUserPasswordByUserId(Long userId, String password) {
+    public void updatePasswordById(Long userId, String password) {
         User user = new User();
         user.setPassword(password);
+        PasswordHelper.encryptPassword(user);
         UserExample userExample = new UserExample();
         userExample.or().andIdEqualTo(userId);
         userMapper.updateByExampleSelective(user, userExample);
@@ -84,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
-    public void updateUserAvatarByUserId(Long userId, String avatar) {
+    public void updateAvatarById(Long userId, String avatar) {
         User user = new User();
         user.setAvatar(avatar);
         UserExample userExample = new UserExample();
@@ -94,25 +106,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional// 开启事务
-    public UserInfoVo getUserInfoByUserId(Long userId) {
+    public UserInfoVo findById(Long userId) {
         UserInfoVo resultObject = new UserInfoVo();
         User user = userMapper.selectByPrimaryKey(userId);
         BeanUtils.copyProperties(user, resultObject);
+        resultObject.setUserId(userId);
         return resultObject;
     }
 
     @Override
     @Transactional// 开启事务
-    public User getUserByUsername(String username) {
+    public User findByUsername(String username) {
         UserExample userExample = new UserExample();
         userExample.or().andNameEqualTo(username);
         return userMapper.selectByExample(userExample).get(0);
     }
 
     @Override
+    @Transactional// 开启事务
     public void updateLastLoginTime(User user) {
         user.setLastLoginTime(new Date());// 设置为当前时间
         userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<User> listAll(int pageNum, int pageSize) {
+
+        List<User> resultList = new LinkedList<>();
+
+        UserExample userExample = new UserExample();
+        userExample.or();// 无条件查询即查询所有
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
+        resultList = userMapper.selectByExample(userExample);
+
+        return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long countAll() {
+        UserExample userExample = new UserExample();
+        userExample.or();// 无条件查询即查询所有
+        Long count = userMapper.countByExample(userExample);
+
+        return count;
     }
 
     @Override

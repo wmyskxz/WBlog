@@ -35,7 +35,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     @Transactional// 开启事务
-    public NotifyVo getNotifiesByUserId(Long userId) {
+    public NotifyVo countByUserId(Long userId) {
         NotifyVo resultObject = new NotifyVo();
 
         NotifyExample notifyExample = new NotifyExample();
@@ -69,7 +69,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     @Transactional// 开启事务
-    public List<UserFollowVo> getUserFollowsByUserId(Long userId) {
+    public List<UserFollowVo> listUserFollowsByUserId(Long userId) {
 
         List<UserFollowVo> resultList = new LinkedList<>();
 
@@ -103,7 +103,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     @Transactional// 开启事务
-    public List<UserFollowVo> getUserFansByUserId(Long userId) {
+    public List<UserFollowVo> listUserFansByUserId(Long userId) {
         List<UserFollowVo> resultList = new LinkedList<>();
 
         UserFollowExample userFollowExample = new UserFollowExample();

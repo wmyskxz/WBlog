@@ -20,6 +20,14 @@ public interface PermissionService {
     void add(Permission permission);
 
     /**
+     * 给角色赋予权限
+     *
+     * @param roleId
+     * @param permissionId
+     */
+    void givePermission(Long roleId, Long permissionId);
+
+    /**
      * 通过id删除权限信息
      *
      * @param permissionId
@@ -39,7 +47,7 @@ public interface PermissionService {
      * @param permission
      * @param permissionId
      */
-    void updateById(Permission permission, Long permissionId);
+    void update(Permission permission, Long permissionId);
 
     /**
      * 返回所有权限信息
@@ -63,7 +71,6 @@ public interface PermissionService {
      * @return
      */
     Set<String> listPermsByUserId(Long userId);
-
 
 
 }

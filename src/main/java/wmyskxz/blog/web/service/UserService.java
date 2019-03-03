@@ -3,6 +3,8 @@ package wmyskxz.blog.web.service;
 import wmyskxz.blog.module.entity.User;
 import wmyskxz.blog.module.vo.UserInfoVo;
 
+import java.util.List;
+
 /**
  * 用户相关Service
  *
@@ -24,22 +26,29 @@ public interface UserService {
      *
      * @param userId
      */
-    void deleteUserByUserId(Long userId);
+    void deleteByUserId(Long userId);
 
     /**
      * 批量删除用户
      *
      * @param userIds
      */
-    void deleteUsers(Long... userIds);
+    void deleteByUserIds(Long... userIds);
+
+    /**
+     * 修改用户信息(后台) - 修改名字、密码orEmail
+     *
+     * @param userId
+     */
+    void update(Long userId, String name, String password, String email);
 
     /**
      * 用户修改自定义名称
      *
      * @param userId
-     * @param username
+     * @param name
      */
-    void updateUsernameByUserId(Long userId, String username);
+    void updateUserNameById(Long userId, String name);
 
     /**
      * 用户修改密码操作
@@ -47,7 +56,7 @@ public interface UserService {
      * @param userId
      * @param password
      */
-    void updateUserPasswordByUserId(Long userId, String password);
+    void updatePasswordById(Long userId, String password);
 
     /**
      * 用户修改头像
@@ -55,7 +64,7 @@ public interface UserService {
      * @param userId
      * @param avatar
      */
-    void updateUserAvatarByUserId(Long userId, String avatar);
+    void updateAvatarById(Long userId, String avatar);
 
     /**
      * 通过用户id获取用户信息
@@ -63,7 +72,7 @@ public interface UserService {
      * @param userId
      * @return
      */
-    UserInfoVo getUserInfoByUserId(Long userId);
+    UserInfoVo findById(Long userId);
 
     /**
      * 登录 - 通过账户名查找用户信息
@@ -71,7 +80,7 @@ public interface UserService {
      * @param username
      * @return
      */
-    User getUserByUsername(String username);
+    User findByUsername(String username);
 
     /**
      * 更新用户最后登录时间
@@ -79,6 +88,20 @@ public interface UserService {
      * @param user
      */
     void updateLastLoginTime(User user);
+
+    /**
+     * 查询所有的用户信息(后台)
+     *
+     * @return
+     */
+    List<User> listAll(int pageNum, int pageSize);
+
+    /**
+     * 获取用户总数
+     *
+     * @return
+     */
+    Long countAll();
 
     //*********************** 用户操作类 ***************************
 

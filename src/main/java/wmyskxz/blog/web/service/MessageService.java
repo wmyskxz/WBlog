@@ -43,14 +43,27 @@ public interface MessageService {
      * @param userId
      * @return
      */
-    List<MessageListVo> getMessageListByUserId(Long userId);
+    List<MessageListVo> listByUserId(Long userId);
 
     /**
      * 通过对方的id来获取详细的整个聊天内容
      *
      * @param userId
      * @param counterpartId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    public List<MessageVo> getMessagesByUserIdAndConterpartId(Long userId, Long counterpartId);
+    List<MessageVo> listMessageListByUserIdAndConterpartId(Long userId, Long counterpartId, int pageNum, int pageSize);
+
+    /**
+     * 查询两个用户之间的聊天总数
+     *
+     * @param userId
+     * @param counterpartId
+     * @return
+     */
+    Long countByUserIdAndCounterpartId(Long userId, Long counterpartId);
+
+
 }

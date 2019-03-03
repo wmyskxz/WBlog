@@ -21,7 +21,7 @@ public interface BlogService {
      *
      * @return
      */
-    Long getBlogsNumber();
+    Long countAll();
 
     /**
      * 获取某一个用户的文章总数
@@ -29,7 +29,7 @@ public interface BlogService {
      * @param userId
      * @return
      */
-    Long getBlogsNumberByUserId(Long userId);
+    Long countByUserId(Long userId);
 
     /**
      * 获取一个分类下的文章数量
@@ -37,28 +37,28 @@ public interface BlogService {
      * @param categoryId
      * @return
      */
-    Long getBlogsNumberByCategoryId(Long categoryId);
+    Long countByCategoryId(Long categoryId);
 
     /**
      * 首页 - 获取最新的文章列表
      *
      * @return
      */
-    List<BlogListVo> getNewestBlogs(int pageNum, int pageSize);
+    List<BlogListVo> listNewestBlogs(int pageNum, int pageSize);
 
     /**
      * 首页 - 获取最热的文章列表
      *
      * @return
      */
-    List<BlogListVo> getHotestBlogs(int pageNum, int pageSize);
+    List<BlogListVo> listHotestBlogs(int pageNum, int pageSize);
 
     /**
      * 首页 - 获取最新推荐的文章列表
      *
      * @return
      */
-    List<BlogListVo> getRecommendBlogs(int pageNum, int pageSize);
+    List<BlogListVo> listRecommendBlogs(int pageNum, int pageSize);
 
     /**
      * 个人主页 - 按照用户id来获取用户自定义的推荐文章列表
@@ -66,7 +66,7 @@ public interface BlogService {
      * @param userId
      * @return
      */
-    List<BlogInfoVo> getRecommendBlogsByUserId(Long userId, int pageNum, int pageSize);
+    List<BlogInfoVo> listRecommendBlogsByUserId(Long userId, int pageNum, int pageSize);
 
     /**
      * 个人主页 - 获取用户的所有文章
@@ -74,7 +74,7 @@ public interface BlogService {
      * @param userId
      * @return
      */
-    List<BlogInfoVo> getBlogsByUserId(Long userId, int pageNum, int pageSize);
+    List<BlogInfoVo> listByUserId(Long userId, int pageNum, int pageSize);
 
     /**
      * 个人主页(博客页) - 按照分类id(唯一)来获取文章列表
@@ -82,7 +82,7 @@ public interface BlogService {
      * @param categoryId
      * @return
      */
-    List<BlogInfoVo> getBlogsByCategoryId(Long categoryId, int pageNum, int pageSize);
+    List<BlogInfoVo> listByCategoryId(Long categoryId, int pageNum, int pageSize);
 
     /**
      * 个人主页(博文页) - 按照博文的id获取相应的博文信息
@@ -90,7 +90,7 @@ public interface BlogService {
      * @param blogId
      * @return
      */
-    BlogVo getBlogByBlogId(Long blogId);
+    BlogVo findById(Long blogId);
 
     /**
      * 个人主页(管理页) - 增加一篇博文
@@ -99,14 +99,14 @@ public interface BlogService {
      * @param blogContent
      * @param categoryId
      */
-    void addBlog(BlogInfo blogInfo, BlogContent blogContent, Long categoryId);
+    void add(BlogInfo blogInfo, BlogContent blogContent, Long categoryId);
 
     /**
      * 个人主页(管理页) - 通过文章id删除一篇博文
      *
      * @param blogId
      */
-    void deleteBlogByBlogId(Long blogId);
+    void deleteById(Long blogId);
 
     /**
      * 个人主页(管理页) - 修改一篇博文
@@ -115,5 +115,5 @@ public interface BlogService {
      * @param blogContent
      * @param categoryId
      */
-    void updateBlog(BlogInfo blogInfo, BlogContent blogContent, Long categoryId);
+    void update(BlogInfo blogInfo, BlogContent blogContent, Long categoryId);
 }
