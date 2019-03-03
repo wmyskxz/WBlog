@@ -2,10 +2,8 @@ package wmyskxz.blog.web.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.dao.BlogCategoryMapper;
 import wmyskxz.blog.module.dao.BlogContentMapper;
 import wmyskxz.blog.module.dao.BlogInfoMapper;
@@ -16,6 +14,7 @@ import wmyskxz.blog.module.vo.BlogListVo;
 import wmyskxz.blog.module.vo.BlogVo;
 import wmyskxz.blog.web.service.BlogService;
 
+import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,24 +27,47 @@ import java.util.List;
 @Service
 public class BlogServiceImpl implements BlogService {
 
-    @Autowired
-    BlogInfoMapper blogInfoMapper;
-    @Autowired
-    UserMapper userMapper;
-    @Autowired
-    BlogCategoryMapper blogCategoryMapper;
-    @Autowired
-    BlogContentMapper blogContentMapper;
+    @Resource BlogInfoMapper blogInfoMapper;
+    @Resource UserMapper userMapper;
+    @Resource BlogCategoryMapper blogCategoryMapper;
+    @Resource BlogContentMapper blogContentMapper;
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> getNewestBlogs() {
+    public Long getBlogsNumber() {
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or();// 无条件查询即查询全部
+        Long count = blogInfoMapper.countByExample(blogInfoExample);
+        return count;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long getBlogsNumberByUserId(Long userId) {
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or().andUserIdEqualTo(userId);
+        Long count = blogInfoMapper.countByExample(blogInfoExample);
+        return count;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long getBlogsNumberByCategoryId(Long categoryId) {
+        BlogCategoryExample blogCategoryExample = new BlogCategoryExample();
+        blogCategoryExample.or().andCategoryIdEqualTo(categoryId);
+        Long count = blogCategoryMapper.countByExample(blogCategoryExample);
+        return count;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<BlogListVo> getNewestBlogs(int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.setOrderByClause("create_time DESC");// 设置按照创建时间降序排列
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次的查询生效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
@@ -56,13 +78,13 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> getHotestBlogs() {
+    public List<BlogListVo> getHotestBlogs(int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.setOrderByClause("vote_size DESC");// 按照点赞数降序排列
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次的查询生效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
@@ -73,13 +95,13 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> getRecommendBlogs() {
+    public List<BlogListVo> getRecommendBlogs(int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andIsRecommendEqualTo(true);
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次的查询生效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
@@ -90,13 +112,13 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogInfoVo> getRecommendBlogsByUserId(Long userId) {
+    public List<BlogInfoVo> getRecommendBlogsByUserId(Long userId, int pageNum, int pageSize) {
 
         List<BlogInfoVo> resultList = new LinkedList<>();
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andUserIdEqualTo(userId).andIsRecommendEqualTo(true);
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次的查询生效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
@@ -107,13 +129,29 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogInfoVo> getBlogsByCategoryId(Long categoryId) {
+    public List<BlogInfoVo> getBlogsByUserId(Long userId, int pageNum, int pageSize) {
+        List<BlogInfoVo> resultList = new LinkedList<>();
+
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or().andUserIdEqualTo(userId);
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
+        List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
+
+        // 拼接数据
+        resultList = joinBlogInfoVo(blogInfos);
+
+        return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<BlogInfoVo> getBlogsByCategoryId(Long categoryId, int pageNum, int pageSize) {
 
         List<BlogInfoVo> resultList = new LinkedList<>();
 
         BlogCategoryExample blogCategoryExample = new BlogCategoryExample();
         blogCategoryExample.or().andCategoryIdEqualTo(categoryId);
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次的查询生效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogCategory> blogCategoryList = blogCategoryMapper.selectByExample(blogCategoryExample);
 
         List<BlogInfo> blogInfos = new LinkedList<>();
