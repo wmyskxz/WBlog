@@ -37,7 +37,7 @@ public class UserController {
     @ApiOperation("删除一个用户")
     @DeleteMapping("/{userId}")
     public ResponseVo deleteById(@PathVariable Long userId) {
-        userService.deleteUserByUserId(userId);
+        userService.deleteByUserId(userId);
         return ResultUtil.success("删除成功!");
     }
 
@@ -48,7 +48,7 @@ public class UserController {
             @ApiImplicitParam(name = "email", value = "用户自定义密码", required = true, dataType = "String")})
     @PutMapping("/{userId}")
     public ResponseVo update(@PathVariable Long userId, String name, String password, String email) {
-        userService.updateUserByUserId(userId, name, password, email);
+        userService.update(userId, name, password, email);
         return ResultUtil.success("修改成功!");
     }
 
@@ -59,14 +59,14 @@ public class UserController {
     @GetMapping("")
     public PageResultVo list(@RequestParam(defaultValue = "0") int pageNum,
                              @RequestParam(defaultValue = "10") int pageSize) {
-        return ResultUtil.table(userService.listAll(pageNum, pageSize), userService.getUserNumber());
+        return ResultUtil.table(userService.listAll(pageNum, pageSize), userService.countAll());
     }
 
     // 查询某一个用户的信息
     @ApiOperation("查询某一个用户的信息")
     @GetMapping("/{userId}")
     public ResponseVo find(@PathVariable Long userId) {
-        return ResultUtil.success("查询成功!", userService.getUserInfoByUserId(userId));
+        return ResultUtil.success("查询成功!", userService.findById(userId));
     }
 
 }

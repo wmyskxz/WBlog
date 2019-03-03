@@ -37,7 +37,7 @@ public class PermissionController {
             dataType = "String")})
     @PostMapping("/role")
     public ResponseVo addRole(@RequestParam String name, @RequestParam String description) {
-        roleService.addRole(name, description);
+        roleService.add(name, description);
         return ResultUtil.success("添加成功!");
     }
 
@@ -83,7 +83,7 @@ public class PermissionController {
     @ApiOperation("删除一个角色")
     @DeleteMapping("/role/{roleId}")
     public ResponseVo deleteRoleByRoleId(@PathVariable Long roleId) {
-        roleService.deleteRoleByRoleId(roleId);
+        roleService.deleteById(roleId);
         return ResultUtil.success("操作成功!");
     }
 
@@ -103,7 +103,7 @@ public class PermissionController {
     @PutMapping("/role/{roleId}")
     public ResponseVo updateRole(@PathVariable Long roleId, @RequestParam String name,
                                  @RequestParam String description) {
-        roleService.updateRoleByRoleId(name, description, roleId);
+        roleService.update(name, description, roleId);
         return ResultUtil.success("操作成功!");
     }
 
@@ -116,7 +116,7 @@ public class PermissionController {
             true, dataType = "String")})
     @PutMapping("permission/{permissionId}")
     public ResponseVo updatePermission(@PathVariable Long permissionId, Permission permission) {
-        permissionService.updateById(permission, permissionId);
+        permissionService.update(permission, permissionId);
         return ResultUtil.success("操作成功!");
     }
 
@@ -133,7 +133,7 @@ public class PermissionController {
     @ApiOperation("查询一个用户所拥有的角色信息")
     @GetMapping("/role/{userId}")
     public PageResultVo listRolesByUserId(@PathVariable Long userId) {
-        return ResultUtil.table((List<?>) roleService.getRolesByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
+        return ResultUtil.table((List<?>) roleService.listByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
     }
 
     // 查询所有权限信息

@@ -52,7 +52,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         }
         User user = (User) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.setRoles(roleService.getRolesByUserId(user.getId()));
+        info.setRoles(roleService.listByUserId(user.getId()));
         info.setStringPermissions(permissionService.listPermsByUserId(user.getId()));
         return info;
     }
@@ -80,7 +80,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         // 获取用户的输入的账号.
         String username = (String) token.getPrincipal();
-        User user = userService.getUserByUsername(username);
+        User user = userService.findByUsername(username);
         if (user == null) {
             throw new UnknownAccountException();
         }

@@ -32,7 +32,7 @@ public class CommentController {
             @ApiImplicitParam(name = "userId", value = "评论者@的人的id,非必须", required = false, dataType = "Long"),})
     @PostMapping("")
     public ResponseVo addComment(Long userId, Long blogId, String content, Long atId) {
-        commentService.addComment(userId, blogId, content, atId);
+        commentService.add(userId, blogId, content, atId);
         return ResultUtil.success("评论成功!");
     }
 
@@ -46,7 +46,7 @@ public class CommentController {
     @PostMapping("/reply/{commentId}")
     public ResponseVo replyComment(@PathVariable Long commentId, Long userId, Long blogId, String content, Long atId,
                                    Long blogerId) {
-        commentService.replyComment(userId, blogId, content, atId, blogerId);
+        commentService.reply(userId, blogId, content, atId, blogerId);
         return ResultUtil.success("回复成功!");
     }
 
@@ -54,7 +54,7 @@ public class CommentController {
     @ApiOperation(value = "删除一条评论", notes = "只有博主才有权限删除")
     @DeleteMapping("/{commentId}")
     public ResponseVo deleteComment(@PathVariable Long commentId) {
-        commentService.deleteCommentByCommentId(commentId);
+        commentService.deleteById(commentId);
         return ResultUtil.success("删除成功!");
     }
 
@@ -62,7 +62,7 @@ public class CommentController {
     @ApiOperation(value = "查询某篇文章下的所有评论消息", notes = "默认显示全部,不分页")
     @GetMapping("/{blogId}")
     public PageResultVo listAllByBlogId(@PathVariable Long blogId) {
-        return ResultUtil.table(commentService.getCommentsByBlogId(blogId), ConstCode.DEFAULT_NO_PAGING);
+        return ResultUtil.table(commentService.listByBlogId(blogId), ConstCode.DEFAULT_NO_PAGING);
     }
 
     // 查询某个用户的评论信息
@@ -71,7 +71,7 @@ public class CommentController {
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/user/{userId}")
     public PageResultVo listAllByUserId(@PathVariable Long userId, int pageNum, int pageSize) {
-        return ResultUtil.table(commentService.getCommentsByUserId(userId, pageNum, pageSize),
+        return ResultUtil.table(commentService.listByUserId(userId, pageNum, pageSize),
                                 commentService.countByUserId(userId));
     }
 }

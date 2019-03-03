@@ -40,7 +40,7 @@ public class BlogController {
             @ApiImplicitParam(name = "categoryId", value = "分类id", required = true, dataType = "Long")})
     @PostMapping("")
     public ResponseVo addBlog(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {
-        blogService.addBlog(blogInfo, blogContent, categoryId);
+        blogService.add(blogInfo, blogContent, categoryId);
         return ResultUtil.success("新增文章成功!");
     }
 
@@ -49,7 +49,7 @@ public class BlogController {
     @ApiImplicitParam(name = "blogId", value = "文章id", required = true, dataType = "Long")
     @DeleteMapping("/{blogId}")
     public ResponseVo deleteBlog(@PathVariable Long blogId) {
-        blogService.deleteBlogByBlogId(blogId);
+        blogService.deleteById(blogId);
         return ResultUtil.success("删除文章成功!");
     }
 
@@ -65,7 +65,7 @@ public class BlogController {
     public ResponseVo updateBlog(@PathVariable Long blogId, BlogInfo blogInfo, BlogContent blogContent,
                                  Long categoryId) {
         blogInfo.setId(blogId);
-        blogService.updateBlog(blogInfo, blogContent, categoryId);
+        blogService.update(blogInfo, blogContent, categoryId);
         return ResultUtil.success("修改文章成功!");
     }
 
@@ -76,7 +76,7 @@ public class BlogController {
     @GetMapping("/newest")
     public PageResultVo getNewestBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                        @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.getNewestBlogs(pageNum, pageSize), blogService.getBlogsNumber());
+        return ResultUtil.table(blogService.listNewestBlogs(pageNum, pageSize), blogService.countAll());
     }
 
     // 获取最热的文章列表
@@ -86,7 +86,7 @@ public class BlogController {
     @GetMapping("/hotest")
     public PageResultVo getHotestBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                        @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.getHotestBlogs(pageNum, pageSize), blogService.getBlogsNumber());
+        return ResultUtil.table(blogService.listHotestBlogs(pageNum, pageSize), blogService.countAll());
     }
 
     // 获取推荐文章列表
@@ -96,14 +96,14 @@ public class BlogController {
     @GetMapping("/recommend")
     public PageResultVo getRecommendBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                           @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.getRecommendBlogs(pageNum, pageSize), blogService.getBlogsNumber());
+        return ResultUtil.table(blogService.listRecommendBlogs(pageNum, pageSize), blogService.countAll());
     }
 
     // 获取某一篇博文详情
     @ApiOperation("获取某一篇博文详情")
     @GetMapping("/{blogId}")
     public ResponseVo getBlogById(@PathVariable("blogId") Long blogId) {
-        return ResultUtil.success("获取成功!", blogService.getBlogByBlogId(blogId));
+        return ResultUtil.success("获取成功!", blogService.findById(blogId));
     }
 
     // 获取某一个用户的推荐文章列表
@@ -114,8 +114,8 @@ public class BlogController {
     public PageResultVo getRecommendBlogsByUserId(@PathVariable("userId") Long userId,
                                                   @RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                                   @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.getRecommendBlogsByUserId(userId, pageNum, pageSize),
-                                blogService.getBlogsNumberByUserId(userId));
+        return ResultUtil.table(blogService.listRecommendBlogsByUserId(userId, pageNum, pageSize),
+                                blogService.countByUserId(userId));
     }
 
     // 获取某一个用户的文章列表
@@ -126,8 +126,8 @@ public class BlogController {
     public PageResultVo getBlogsByUserId(@PathVariable("userId") Long userId,
                                          @RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                          @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.getBlogsByUserId(userId, pageNum, pageSize),
-                                blogService.getBlogsNumberByUserId(userId));
+        return ResultUtil.table(blogService.listByUserId(userId, pageNum, pageSize),
+                                blogService.countByUserId(userId));
     }
 
     // 获取某一个用户某个分类下的文章列表
@@ -138,8 +138,8 @@ public class BlogController {
     public PageResultVo getBlogsByUserIdAndCategoryId(@PathVariable("categoryId") Long categoryId,
                                                       @RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                                       @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.getBlogsByCategoryId(categoryId, pageNum, pageSize),
-                                blogService.getBlogsNumberByCategoryId(categoryId));
+        return ResultUtil.table(blogService.listByCategoryId(categoryId, pageNum, pageSize),
+                                blogService.countByCategoryId(categoryId));
     }
 
 }

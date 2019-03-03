@@ -29,7 +29,7 @@ public class CategoryController {
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "Long"),})
     @PostMapping("")
     public ResponseVo addCategory(CategoryVo categoryVo) {
-        categoryService.updateCategory(categoryVo);
+        categoryService.update(categoryVo);
         return ResultUtil.success("添加成功!");
     }
 
@@ -37,7 +37,7 @@ public class CategoryController {
     @ApiOperation("删除一个分类")
     @DeleteMapping("{categoryId}")
     public ResponseVo deleteCategory(@PathVariable Long categoryId) {
-        categoryService.deleteCategoryByCategoryId(categoryId);
+        categoryService.deleteById(categoryId);
         return ResultUtil.success("删除成功!");
     }
 
@@ -48,7 +48,7 @@ public class CategoryController {
             @ApiImplicitParam(name = "categoryId", value = "分类id", required = true, dataType = "Long"),})
     @PutMapping()
     public ResponseVo updateCategory(CategoryVo categoryVo) {
-        categoryService.updateCategory(categoryVo);
+        categoryService.update(categoryVo);
         return ResultUtil.success("修改成功!");
     }
 
@@ -57,6 +57,6 @@ public class CategoryController {
     @GetMapping("/{userId}")
     public PageResultVo listAll(@PathVariable Long userId) {
         return ResultUtil
-                .table(categoryService.listByUserId(userId), categoryService.getCategoryNumberByUserId(userId));
+                .table(categoryService.listByUserId(userId), categoryService.countByUserId(userId));
     }
 }

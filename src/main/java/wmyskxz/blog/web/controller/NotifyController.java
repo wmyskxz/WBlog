@@ -30,6 +30,6 @@ public class NotifyController {
     @ApiOperation(value = "查询某个用户的通知消息", notes = "包括评论/私信/喜欢/关注四类消息")
     @GetMapping("/{userId}")
     public ResponseVo listByUserId(@PathVariable Long userId) {
-        return ResultUtil.success("查询成功!", notifyService.getNotifiesByUserId(userId));
+        return ResultUtil.success("查询成功!", notifyService.countByUserId(userId));
     }
 }

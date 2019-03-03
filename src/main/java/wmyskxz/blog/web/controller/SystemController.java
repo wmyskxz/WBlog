@@ -42,7 +42,7 @@ public class SystemController {
         //     return ResultUtil.error("验证码错误！");
         // }
         String username = registerUser.getUsername();
-        User user = userService.getUserByUsername(username);
+        User user = userService.findByUsername(username);
         if (null != user) {
             // return ResultUtil.error("用户名已存在！");
         }

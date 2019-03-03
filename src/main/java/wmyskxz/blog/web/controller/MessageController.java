@@ -55,7 +55,7 @@ public class MessageController {
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/{userId}")
     public PageResultVo listByUserId(@PathVariable Long userId, @RequestParam int pageNum, @RequestParam int pageSize) {
-        return ResultUtil.table(messageService.getMessageListByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
+        return ResultUtil.table(messageService.listByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
     }
 
     // 查询与某个用户之间的私信记录
@@ -66,7 +66,7 @@ public class MessageController {
     public PageResultVo listByCounterpartId(@PathVariable Long userId, @PathVariable Long counterpartId,
                                             @RequestParam int pageNum, @RequestParam int pageSize) {
         return ResultUtil
-                .table(messageService.getMessagesByUserIdAndConterpartId(userId, counterpartId, pageNum, pageSize),
+                .table(messageService.listMessageListByUserIdAndConterpartId(userId, counterpartId, pageNum, pageSize),
                        messageService.countByUserIdAndCounterpartId(userId, counterpartId));
     }
 }
