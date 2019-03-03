@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ResultUtil;
 import wmyskxz.blog.web.service.UserService;
@@ -16,7 +16,7 @@ import wmyskxz.blog.web.service.UserService;
  * @auth:wmyskxz
  * @date:2019/03/01 - 22:48
  */
-@Controller
+@RestController
 @RequestMapping("/apis/user")
 public class UserController {
 
@@ -34,26 +34,39 @@ public class UserController {
     }
 
     // 删除一个用户
+    @ApiOperation("删除一个用户")
     @DeleteMapping("/{userId}")
     public ResponseVo deleteById(@PathVariable Long userId) {
-        return null;
+        userService.deleteUserByUserId(userId);
+        return ResultUtil.success("删除成功!");
     }
 
     // 修改一个用户(后台)
+    @ApiOperation("修改一个用户(后台)")
+    @ApiImplicitParams({@ApiImplicitParam(name = "name", value = "用户自定义名称", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "password", value = "用户密码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "email", value = "用户自定义密码", required = true, dataType = "String")})
     @PutMapping("/{userId}")
-    public ResponseVo update(@PathVariable Long userId) {
-        return null;
+    public ResponseVo update(@PathVariable Long userId, String name, String password, String email) {
+        userService.updateUserByUserId(userId, name, password, email);
+        return ResultUtil.success("修改成功!");
     }
 
-    // 查询所有用户的用户信息
+    // 查询所有用户的用户信息(后台)
+    @ApiOperation("查询所有用户的用户信息(后台)")
+    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("")
-    public ResponseVo list() {
-        return null;
+    public PageResultVo list(@RequestParam(defaultValue = "0") int pageNum,
+                             @RequestParam(defaultValue = "10") int pageSize) {
+        return ResultUtil.table(userService.listAll(pageNum, pageSize), userService.getUserNumber());
     }
 
     // 查询某一个用户的信息
+    @ApiOperation("查询某一个用户的信息")
     @GetMapping("/{userId}")
     public ResponseVo find(@PathVariable Long userId) {
-        return null;
+        return ResultUtil.success("查询成功!", userService.getUserInfoByUserId(userId));
     }
+
 }

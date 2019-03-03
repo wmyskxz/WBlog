@@ -134,7 +134,7 @@ public class BlogController {
     @ApiOperation(value = "获取一个分类下的文章列表", notes = "分类id是唯一的")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
-    @GetMapping("/category/{categoryId}")// api/blog/user/{userId}/{categoryId}
+    @GetMapping("/category/{categoryId}")
     public PageResultVo getBlogsByUserIdAndCategoryId(@PathVariable("categoryId") Long categoryId,
                                                       @RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                                       @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {

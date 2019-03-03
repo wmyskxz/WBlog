@@ -5,6 +5,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +14,6 @@ import wmyskxz.blog.module.entity.User;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.web.service.UserService;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
@@ -26,16 +26,17 @@ import java.util.Date;
 @Controller
 public class SystemController {
 
-    @Resource
-    UserService userService;
+    @Autowired UserService userService;
 
     /** 提交注册 */
     @PostMapping("/register")
     @ResponseBody
-    public ResponseVo register(HttpServletRequest request, User registerUser, String confirmPassword, String verification){
+    public ResponseVo register(HttpServletRequest request, User registerUser, String confirmPassword,
+                               String verification) {
         // //判断验证码
         // String rightCode = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        // if (StringUtils.isNotBlank(verification) && StringUtils.isNotBlank(rightCode) && verification.equals(rightCode)) {
+        // if (StringUtils.isNotBlank(verification) && StringUtils.isNotBlank(rightCode) && verification.equals
+        // (rightCode)) {
         //     //验证码通过
         // } else {
         //     return ResultUtil.error("验证码错误！");
@@ -68,10 +69,12 @@ public class SystemController {
     /** 提交登录 */
     @PostMapping("/login")
     @ResponseBody
-    public ResponseVo login(HttpServletRequest request, String username, String password, @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) {
+    public ResponseVo login(HttpServletRequest request, String username, String password,
+                            @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) {
         // 判断验证码
         // String rightCode = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        // if (StringUtils.isNotBlank(verification) && StringUtils.isNotBlank(rightCode) && verification.equals(rightCode)) {
+        // if (StringUtils.isNotBlank(verification) && StringUtils.isNotBlank(rightCode) && verification.equals
+        // (rightCode)) {
         //     // 验证码通过
         // } else {
         //     return ResultUtil.error("验证码错误！");
