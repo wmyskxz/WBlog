@@ -151,7 +151,6 @@ public class RoleServiceImpl implements RoleService {
 
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.or().andUserIdEqualTo(userId);
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一次查询有效
         List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
 
         // 拼接数据

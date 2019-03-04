@@ -65,13 +65,13 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     @Transactional// 开启事务
-    public List<UserFollowVo> listUserFollowsByUserId(Long userId) {
+    public List<UserFollowVo> listUserFollowsByUserId(Long userId, int pageNum, int pageSize) {
 
         List<UserFollowVo> resultList = new LinkedList<>();
 
         UserFollowExample userFollowExample = new UserFollowExample();
         userFollowExample.or().andUserIdEqualTo(userId);
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.FOLLOW_AND_FAN_PAGE_SIZE);// 只对下一行查询有效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
         List<UserFollow> userFollows = userFollowMapper.selectByExample(userFollowExample);
 
         // 拼接数据
@@ -99,12 +99,12 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     @Transactional// 开启事务
-    public List<UserFollowVo> listUserFansByUserId(Long userId) {
+    public List<UserFollowVo> listUserFansByUserId(Long userId, int pageNum, int pageSize) {
         List<UserFollowVo> resultList = new LinkedList<>();
 
         UserFollowExample userFollowExample = new UserFollowExample();
         userFollowExample.or().andFollowUserIdEqualTo(userId);
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.FOLLOW_AND_FAN_PAGE_SIZE);// 只对下一行查询有效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
         List<UserFollow> userFans = userFollowMapper.selectByExample(userFollowExample);
 
         // 拼接数据

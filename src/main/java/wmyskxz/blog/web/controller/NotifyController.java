@@ -1,5 +1,7 @@
 package wmyskxz.blog.web.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,17 +38,23 @@ public class NotifyController {
 
     // 查询某个用户的粉丝列表
     @ApiOperation("查询某个用户的粉丝列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/fans/{userId}")
-    public PageResultVo listFansByUserId(@PathVariable Long userId) {
-        return ResultUtil
-                .table(notifyService.listUserFansByUserId(userId), notifyService.countUserFansByUserId(userId));
+    public PageResultVo listFansByUserId(@PathVariable Long userId, @RequestParam int pageNum,
+                                         @RequestParam int pageSize) {
+        return ResultUtil.table(notifyService.listUserFansByUserId(userId, pageNum, pageSize),
+                                notifyService.countUserFansByUserId(userId));
     }
 
     // 查询某个用户的关注用户列表
     @ApiOperation("查询某个用户的关注用户列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/follows/{userId}")
-    public PageResultVo listFollowsByUserId(@PathVariable Long userId) {
-        return ResultUtil
-                .table(notifyService.listUserFollowsByUserId(userId), notifyService.countUserFollowsByUserId(userId));
+    public PageResultVo listFollowsByUserId(@PathVariable Long userId, @RequestParam int pageNum,
+                                            @RequestParam int pageSize) {
+        return ResultUtil.table(notifyService.listUserFollowsByUserId(userId, pageNum, pageSize),
+                                notifyService.countUserFollowsByUserId(userId));
     }
 }

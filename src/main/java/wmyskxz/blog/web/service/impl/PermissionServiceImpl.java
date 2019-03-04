@@ -1,9 +1,7 @@
 package wmyskxz.blog.web.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.dao.PermissionMapper;
 import wmyskxz.blog.module.dao.RolePermissionMapper;
 import wmyskxz.blog.module.dao.UserRoleMapper;
@@ -76,7 +74,6 @@ public class PermissionServiceImpl implements PermissionService {
 
         PermissionExample permissionExample = new PermissionExample();
         permissionExample.or();// 无条件查询即查询全部
-        PageHelper.startPage(PageConfig.PAGE_NUM, PageConfig.PAGE_SIZE);// 只对下一行查询生效
         resultList = permissionMapper.selectByExample(permissionExample);
 
         return resultList;

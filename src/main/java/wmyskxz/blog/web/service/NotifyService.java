@@ -24,9 +24,11 @@ public interface NotifyService {
      * 个人消息页(关注页)
      *
      * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<UserFollowVo> listUserFollowsByUserId(Long userId);
+    List<UserFollowVo> listUserFollowsByUserId(Long userId, int pageNum, int pageSize);
 
     /**
      * 统计用户关注用户的总数
@@ -40,9 +42,11 @@ public interface NotifyService {
      * 个人消息页(粉丝页)
      *
      * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<UserFollowVo> listUserFansByUserId(Long userId);
+    List<UserFollowVo> listUserFansByUserId(Long userId, int pageNum, int pageSize);
 
     /**
      * 统计用户粉丝的总数
