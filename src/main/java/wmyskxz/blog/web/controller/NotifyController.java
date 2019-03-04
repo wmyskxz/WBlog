@@ -3,6 +3,7 @@ package wmyskxz.blog.web.controller;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ResultUtil;
 import wmyskxz.blog.web.service.NotifyService;
@@ -31,5 +32,21 @@ public class NotifyController {
     @GetMapping("/{userId}")
     public ResponseVo listByUserId(@PathVariable Long userId) {
         return ResultUtil.success("查询成功!", notifyService.countByUserId(userId));
+    }
+
+    // 查询某个用户的粉丝列表
+    @ApiOperation("查询某个用户的粉丝列表")
+    @GetMapping("/fans/{userId}")
+    public PageResultVo listFansByUserId(@PathVariable Long userId) {
+        return ResultUtil
+                .table(notifyService.listUserFansByUserId(userId), notifyService.countUserFansByUserId(userId));
+    }
+
+    // 查询某个用户的关注用户列表
+    @ApiOperation("查询某个用户的关注用户列表")
+    @GetMapping("/follows/{userId}")
+    public PageResultVo listFollowsByUserId(@PathVariable Long userId) {
+        return ResultUtil
+                .table(notifyService.listUserFollowsByUserId(userId), notifyService.countUserFollowsByUserId(userId));
     }
 }

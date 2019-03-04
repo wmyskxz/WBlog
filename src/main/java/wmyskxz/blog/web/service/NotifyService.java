@@ -29,10 +29,26 @@ public interface NotifyService {
     List<UserFollowVo> listUserFollowsByUserId(Long userId);
 
     /**
+     * 统计用户关注用户的总数
+     *
+     * @param userId
+     * @return
+     */
+    Long countUserFollowsByUserId(Long userId);
+
+    /**
      * 个人消息页(粉丝页)
      *
      * @param userId
      * @return
      */
     List<UserFollowVo> listUserFansByUserId(Long userId);
+
+    /**
+     * 统计用户粉丝的总数
+     *
+     * @param userId
+     * @return
+     */
+    Long countUserFansByUserId(Long userId);
 }

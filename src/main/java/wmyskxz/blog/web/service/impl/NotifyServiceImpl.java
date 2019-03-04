@@ -25,13 +25,9 @@ import java.util.List;
 @Service
 public class NotifyServiceImpl implements NotifyService {
 
-    @Resource
-    UserMapper userMapper;
-    @Resource
-    NotifyMapper notifyMapper;
-    @Resource
-    UserFollowMapper userFollowMapper;
-
+    @Resource UserMapper userMapper;
+    @Resource NotifyMapper notifyMapper;
+    @Resource UserFollowMapper userFollowMapper;
 
     @Override
     @Transactional// 开启事务
@@ -134,4 +130,23 @@ public class NotifyServiceImpl implements NotifyService {
         return resultList;
     }
 
+    @Override
+    @Transactional// 开启事务
+    public Long countUserFollowsByUserId(Long userId) {
+
+        UserFollowExample userFollowExample = new UserFollowExample();
+        userFollowExample.or().andUserIdEqualTo(userId);
+
+        return userFollowMapper.countByExample(userFollowExample);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long countUserFansByUserId(Long userId) {
+
+        UserFollowExample userFollowExample = new UserFollowExample();
+        userFollowExample.or().andFollowUserIdEqualTo(userId);
+
+        return userFollowMapper.countByExample(userFollowExample);
+    }
 }
