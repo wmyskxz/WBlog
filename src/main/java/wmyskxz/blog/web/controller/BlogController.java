@@ -36,7 +36,7 @@ public class BlogController {
             @ApiImplicitParam(name = "summary", value = "文章简介", required = true, dataType = "String"),
             @ApiImplicitParam(name = "headPicture", value = "文章题图", required = false, dataType = "String"),
             @ApiImplicitParam(name = "contentMd", value = "文章内容md源码", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "contentHTML", value = "文章内容html代码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "contentHtml", value = "文章内容html代码", required = true, dataType = "String"),
             @ApiImplicitParam(name = "categoryId", value = "分类id", required = true, dataType = "Long")})
     @PostMapping("")
     public ResponseVo addBlog(BlogInfo blogInfo, BlogContent blogContent, Long categoryId) {

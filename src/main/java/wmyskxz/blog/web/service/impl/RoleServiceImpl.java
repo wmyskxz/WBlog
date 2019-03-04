@@ -3,7 +3,6 @@ package wmyskxz.blog.web.service.impl;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.dao.PermissionMapper;
 import wmyskxz.blog.module.dao.RoleMapper;
 import wmyskxz.blog.module.dao.RolePermissionMapper;
