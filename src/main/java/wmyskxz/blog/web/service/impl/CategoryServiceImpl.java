@@ -1,7 +1,6 @@
 package wmyskxz.blog.web.service.impl;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.BlogCategoryMapper;
@@ -12,6 +11,7 @@ import wmyskxz.blog.module.entity.CategoryExample;
 import wmyskxz.blog.module.vo.CategoryVo;
 import wmyskxz.blog.web.service.CategoryService;
 
+import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,8 +24,8 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired CategoryMapper categoryMapper;
-    @Autowired BlogCategoryMapper blogCategoryMapper;
+    @Resource CategoryMapper categoryMapper;
+    @Resource BlogCategoryMapper blogCategoryMapper;
 
     @Override
     @Transactional// 开启事务
