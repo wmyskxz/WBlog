@@ -24,6 +24,13 @@ public interface BlogService {
     Long countAll();
 
     /**
+     * 首页 - 获取系统中推荐文章的总数
+     *
+     * @return
+     */
+    Long countAllRecommend();
+
+    /**
      * 获取某一个用户的文章总数
      *
      * @param userId

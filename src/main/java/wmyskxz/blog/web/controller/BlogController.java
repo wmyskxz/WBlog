@@ -96,7 +96,7 @@ public class BlogController {
     @GetMapping("/recommend")
     public PageResultVo getRecommendBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                           @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.listRecommendBlogs(pageNum, pageSize), blogService.countAll());
+        return ResultUtil.table(blogService.listRecommendBlogs(pageNum, pageSize), blogService.countAllRecommend());
     }
 
     // 获取某一篇博文详情

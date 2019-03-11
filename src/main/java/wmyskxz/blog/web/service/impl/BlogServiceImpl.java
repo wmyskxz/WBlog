@@ -43,6 +43,15 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
+    public Long countAllRecommend() {
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or().andIsRecommendEqualTo(true);
+        Long count = blogInfoMapper.countByExample(blogInfoExample);
+        return count;
+    }
+
+    @Override
+    @Transactional// 开启事务
     public Long countByUserId(Long userId) {
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andUserIdEqualTo(userId);
