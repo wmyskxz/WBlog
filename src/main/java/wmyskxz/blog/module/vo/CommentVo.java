@@ -16,9 +16,11 @@ public class CommentVo {
     private Date createTime;// 评论时间
     private String content;// 评论内容
     private String atUsername;// @用户的用户名称
+    private String blogTitle;// 评论文章的标题
 
     // UI隐藏的数据
     private Long userId;// 评论用户的主键id
+    private Long blogId;// 评论文章的id
     private Long atUserId;// @用户的用户id
     private Long commentId;// 评论id
 
@@ -84,5 +86,21 @@ public class CommentVo {
 
     public void setCommentId(Long commentId) {
         this.commentId = commentId;
+    }
+
+    public String getBlogTitle() {
+        return blogTitle;
+    }
+
+    public void setBlogTitle(String blogTitle) {
+        this.blogTitle = blogTitle;
+    }
+
+    public Long getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(Long blogId) {
+        this.blogId = blogId;
     }
 }

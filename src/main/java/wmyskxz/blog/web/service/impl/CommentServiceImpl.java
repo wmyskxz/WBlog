@@ -8,10 +8,7 @@ import wmyskxz.blog.module.dao.BlogInfoMapper;
 import wmyskxz.blog.module.dao.CommentMapper;
 import wmyskxz.blog.module.dao.NotifyMapper;
 import wmyskxz.blog.module.dao.UserMapper;
-import wmyskxz.blog.module.entity.Comment;
-import wmyskxz.blog.module.entity.CommentExample;
-import wmyskxz.blog.module.entity.Notify;
-import wmyskxz.blog.module.entity.User;
+import wmyskxz.blog.module.entity.*;
 import wmyskxz.blog.module.vo.CommentVo;
 import wmyskxz.blog.util.ConstCode;
 import wmyskxz.blog.web.service.CommentService;
@@ -156,6 +153,9 @@ public class CommentServiceImpl implements CommentService {
             // 拼接User数据
             User user = userMapper.selectByPrimaryKey(comment.getUserId());
             BeanUtils.copyProperties(user, commentVo);
+            // 拼接BlogInfo数据
+            BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(comment.getBlogId());
+            commentVo.setBlogTitle(blogInfo.getTitle());
 
             resultList.add(commentVo);
         }   // end for

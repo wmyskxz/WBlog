@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
@@ -18,7 +17,7 @@ import wmyskxz.blog.web.service.CommentService;
  * @auth:wmyskxz
  * @date:2019/02/28 - 18:59
  */
-@Controller
+@RestController
 @RequestMapping("/apis/comment")
 public class CommentController {
 
@@ -29,7 +28,7 @@ public class CommentController {
     @ApiImplicitParams({@ApiImplicitParam(name = "userId", value = "评论者的id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "blogId", value = "评论的文章id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "content", value = "评论内容", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "userId", value = "评论者@的人的id,非必须", required = false, dataType = "Long"),})
+            @ApiImplicitParam(name = "atId", value = "评论者@的人的id,非必须", required = false, dataType = "Long"),})
     @PostMapping("")
     public ResponseVo addComment(Long userId, Long blogId, String content, Long atId) {
         commentService.add(userId, blogId, content, atId);
@@ -71,7 +70,7 @@ public class CommentController {
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/user/{userId}")
     public PageResultVo listAllByUserId(@PathVariable Long userId, int pageNum, int pageSize) {
-        return ResultUtil.table(commentService.listByUserId(userId, pageNum, pageSize),
-                                commentService.countByUserId(userId));
+        return ResultUtil
+                .table(commentService.listByUserId(userId, pageNum, pageSize), commentService.countByUserId(userId));
     }
 }
