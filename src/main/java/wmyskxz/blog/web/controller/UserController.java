@@ -69,4 +69,11 @@ public class UserController {
         return ResultUtil.success("查询成功!", userService.findById(userId));
     }
 
+    // 查询某一个用户的主页信息
+    @ApiOperation("查询某一个用户的主页信息")
+    @GetMapping("/home/{userId}")
+    public ResponseVo home(@PathVariable Long userId, @RequestParam(required = false) Long visitUserId) {
+        return ResultUtil.success("查询成功!", userService.findUserHomeInfoById(userId, visitUserId));
+    }
+
 }

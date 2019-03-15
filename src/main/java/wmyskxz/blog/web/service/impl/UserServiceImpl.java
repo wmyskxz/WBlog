@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.*;
 import wmyskxz.blog.module.entity.*;
+import wmyskxz.blog.module.vo.UserHomeVo;
 import wmyskxz.blog.module.vo.UserInfoVo;
 import wmyskxz.blog.util.ConstCode;
 import wmyskxz.blog.util.PasswordHelper;
@@ -212,5 +213,38 @@ public class UserServiceImpl implements UserService {
         BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
         blogInfo.setVoteSize(blogInfo.getVoteSize() - 1);
         blogInfoMapper.updateByPrimaryKeySelective(blogInfo);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public UserHomeVo findUserHomeInfoById(Long userId, Long visitUserId) {
+
+        UserHomeVo resultObject = new UserHomeVo();
+        User user = userMapper.selectByPrimaryKey(userId);
+        // 把user同resultObject相同的字段赋值给后者
+        // avatar/username/fanSize/followSize/voteSize/description
+        // 还剩下isFollow/blogSize/userId没有设置
+        BeanUtils.copyProperties(user, resultObject);
+        // 设置userId
+        resultObject.setUserId(user.getId());
+        // 查询blogSize
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or().andUserIdEqualTo(userId);
+        Long count = blogInfoMapper.countByExample(blogInfoExample);
+        resultObject.setBlogSize(Math.toIntExact(count));
+        // 查询是否关注该用户
+        if (null == visitUserId || userId.equals(visitUserId)) {
+            // 如果没有登录,null表示没有登录 or 自己访问自己
+            resultObject.setFollow(false);
+        } else {
+            UserFollowExample userFollowExample = new UserFollowExample();
+            userFollowExample.or().andUserIdEqualTo(visitUserId).andFollowUserIdEqualTo(userId);
+            if (userFollowMapper.selectByExample(userFollowExample).isEmpty()) {
+                // 为空则表明没有关注该用户
+                resultObject.setFollow(false);
+            } else resultObject.setFollow(true);
+        }   // end if
+
+        return resultObject;
     }
 }

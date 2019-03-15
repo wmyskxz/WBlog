@@ -1,6 +1,7 @@
 package wmyskxz.blog.web.service;
 
 import wmyskxz.blog.module.entity.User;
+import wmyskxz.blog.module.vo.UserHomeVo;
 import wmyskxz.blog.module.vo.UserInfoVo;
 
 import java.util.List;
@@ -81,6 +82,15 @@ public interface UserService {
      * @return
      */
     User findByUsername(String username);
+
+    /**
+     * 用户主页 - 查询该用户的基础信息
+     *
+     * @param userId
+     * @param visitUserId 访问该方法的用户,为空则表明没有登录
+     * @return
+     */
+    UserHomeVo findUserHomeInfoById(Long userId, Long visitUserId);
 
     /**
      * 更新用户最后登录时间
