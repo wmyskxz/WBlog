@@ -192,6 +192,7 @@ public class UserServiceImpl implements UserService {
         Vote vote = new Vote();
         vote.setUserId(userId);
         vote.setBlogId(blogId);
+        vote.setNotifyId(notify.getId());
         voteMapper.insertSelective(vote);
     }
 

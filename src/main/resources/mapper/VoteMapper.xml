@@ -7,6 +7,7 @@
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="user_id" javaType="java.lang.Long" jdbcType="BIGINT" />
       <arg column="blog_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="notify_id" javaType="java.lang.Long" jdbcType="BIGINT" />
     </constructor>
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, create_time, user_id, blog_id
+    id, create_time, user_id, blog_id, notify_id
   </sql>
   <select id="selectByExample" parameterType="wmyskxz.blog.module.entity.VoteExample" resultMap="BaseResultMap">
     select
@@ -104,10 +105,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into vote (create_time, user_id, blog_id
-      )
-    values (#{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=BIGINT}, #{blogId,jdbcType=BIGINT}
-      )
+    insert into vote (create_time, user_id, blog_id, 
+      notify_id)
+    values (#{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=BIGINT}, #{blogId,jdbcType=BIGINT}, 
+      #{notifyId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="wmyskxz.blog.module.entity.Vote">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -124,6 +125,9 @@
       <if test="blogId != null">
         blog_id,
       </if>
+      <if test="notifyId != null">
+        notify_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="createTime != null">
@@ -134,6 +138,9 @@
       </if>
       <if test="blogId != null">
         #{blogId,jdbcType=BIGINT},
+      </if>
+      <if test="notifyId != null">
+        #{notifyId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -158,6 +165,9 @@
       <if test="record.blogId != null">
         blog_id = #{record.blogId,jdbcType=BIGINT},
       </if>
+      <if test="record.notifyId != null">
+        notify_id = #{record.notifyId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -168,7 +178,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       user_id = #{record.userId,jdbcType=BIGINT},
-      blog_id = #{record.blogId,jdbcType=BIGINT}
+      blog_id = #{record.blogId,jdbcType=BIGINT},
+      notify_id = #{record.notifyId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -185,6 +196,9 @@
       <if test="blogId != null">
         blog_id = #{blogId,jdbcType=BIGINT},
       </if>
+      <if test="notifyId != null">
+        notify_id = #{notifyId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -192,7 +206,8 @@
     update vote
     set create_time = #{createTime,jdbcType=TIMESTAMP},
       user_id = #{userId,jdbcType=BIGINT},
-      blog_id = #{blogId,jdbcType=BIGINT}
+      blog_id = #{blogId,jdbcType=BIGINT},
+      notify_id = #{notifyId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

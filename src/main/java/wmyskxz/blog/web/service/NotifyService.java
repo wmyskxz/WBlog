@@ -2,6 +2,7 @@ package wmyskxz.blog.web.service;
 
 import wmyskxz.blog.module.vo.NotifyVo;
 import wmyskxz.blog.module.vo.UserFollowVo;
+import wmyskxz.blog.module.vo.VoteVo;
 
 import java.util.List;
 
@@ -19,6 +20,16 @@ public interface NotifyService {
      * @return
      */
     NotifyVo countByUserId(Long userId);
+
+    /**
+     * 个人消息页 - 获取用户的点赞信息
+     *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<VoteVo> listUserVotesByUserId(Long userId, int pageNum, int pageSize);
 
     /**
      * 个人消息页(关注页)
@@ -55,4 +66,12 @@ public interface NotifyService {
      * @return
      */
     Long countUserFansByUserId(Long userId);
+
+    /**
+     * 统计用户的点赞消息总数
+     *
+     * @param userId
+     * @return
+     */
+    Long countUserVotesByUserId(Long userId);
 }

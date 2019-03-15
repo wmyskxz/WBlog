@@ -344,6 +344,66 @@ public class VoteExample {
             addCriterion("blog_id not between", value1, value2, "blogId");
             return (Criteria) this;
         }
+
+        public Criteria andNotifyIdIsNull() {
+            addCriterion("notify_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdIsNotNull() {
+            addCriterion("notify_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdEqualTo(Long value) {
+            addCriterion("notify_id =", value, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdNotEqualTo(Long value) {
+            addCriterion("notify_id <>", value, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdGreaterThan(Long value) {
+            addCriterion("notify_id >", value, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("notify_id >=", value, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdLessThan(Long value) {
+            addCriterion("notify_id <", value, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdLessThanOrEqualTo(Long value) {
+            addCriterion("notify_id <=", value, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdIn(List<Long> values) {
+            addCriterion("notify_id in", values, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdNotIn(List<Long> values) {
+            addCriterion("notify_id not in", values, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdBetween(Long value1, Long value2) {
+            addCriterion("notify_id between", value1, value2, "notifyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNotifyIdNotBetween(Long value1, Long value2) {
+            addCriterion("notify_id not between", value1, value2, "notifyId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

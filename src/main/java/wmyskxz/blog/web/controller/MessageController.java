@@ -29,6 +29,8 @@ public class MessageController {
             @ApiImplicitParam(name = "content", value = "私信内容", required = true, dataType = "String"),})
     @PostMapping("/{userId}")
     public ResponseVo sendMessage(@PathVariable Long userId, Long receiverId, String content) {
+        System.out.println(receiverId);
+        System.out.println(content);
         messageService.sendMessage(userId, receiverId, content);
         return ResultUtil.success("发送成功!");
     }

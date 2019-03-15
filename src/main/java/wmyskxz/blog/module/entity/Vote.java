@@ -11,11 +11,14 @@ public class Vote {
 
     private Long blogId;
 
-    public Vote(Long id, Date createTime, Long userId, Long blogId) {
+    private Long notifyId;
+
+    public Vote(Long id, Date createTime, Long userId, Long blogId, Long notifyId) {
         this.id = id;
         this.createTime = createTime;
         this.userId = userId;
         this.blogId = blogId;
+        this.notifyId = notifyId;
     }
 
     public Vote() {
@@ -52,5 +55,13 @@ public class Vote {
 
     public void setBlogId(Long blogId) {
         this.blogId = blogId;
+    }
+
+    public Long getNotifyId() {
+        return notifyId;
+    }
+
+    public void setNotifyId(Long notifyId) {
+        this.notifyId = notifyId;
     }
 }

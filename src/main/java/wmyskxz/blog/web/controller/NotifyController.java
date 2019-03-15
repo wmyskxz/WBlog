@@ -9,6 +9,7 @@ import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ResultUtil;
 import wmyskxz.blog.web.service.NotifyService;
+import wmyskxz.blog.web.service.UserService;
 
 /**
  * 通知消息控制器
@@ -21,6 +22,7 @@ import wmyskxz.blog.web.service.NotifyService;
 public class NotifyController {
 
     @Autowired NotifyService notifyService;
+    @Autowired UserService userService;
 
     // 管理员发送一条通知
     @ApiOperation("管理员发送一条通知")
@@ -57,4 +59,22 @@ public class NotifyController {
         return ResultUtil.table(notifyService.listUserFollowsByUserId(userId, pageNum, pageSize),
                                 notifyService.countUserFollowsByUserId(userId));
     }
+
+    // 查询某个用户的点赞信息
+    @ApiOperation("查询某个用户的点赞信息")
+    @GetMapping("/vote/{userId}")
+    public PageResultVo listVotesByUserId(@PathVariable Long userId, @RequestParam int pageNum,
+                                          @RequestParam int pageSize) {
+        return ResultUtil.table(notifyService.listUserVotesByUserId(userId, pageNum, pageSize),
+                                notifyService.countUserVotesByUserId(userId));
+    }
+
+    // 某一个用户给某一篇博文点赞
+    @ApiOperation("某一个用户给某一篇博文点赞")
+    @PostMapping("/vote/{userId}/{blogId}")
+    public ResponseVo vote(@PathVariable Long userId, @PathVariable Long blogId) {
+        userService.vote(userId, blogId);
+        return ResultUtil.success("成功!");
+    }
+
 }

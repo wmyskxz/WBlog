@@ -8,6 +8,7 @@ import wmyskxz.blog.module.dao.*;
 import wmyskxz.blog.module.entity.*;
 import wmyskxz.blog.module.vo.NotifyVo;
 import wmyskxz.blog.module.vo.UserFollowVo;
+import wmyskxz.blog.module.vo.VoteVo;
 import wmyskxz.blog.util.ConstCode;
 import wmyskxz.blog.web.service.NotifyService;
 
@@ -27,6 +28,8 @@ public class NotifyServiceImpl implements NotifyService {
     @Resource UserMapper userMapper;
     @Resource NotifyMapper notifyMapper;
     @Resource UserFollowMapper userFollowMapper;
+    @Resource BlogInfoMapper blogInfoMapper;
+    @Resource VoteMapper voteMapper;
 
     @Override
     @Transactional// 开启事务
@@ -60,6 +63,41 @@ public class NotifyServiceImpl implements NotifyService {
         resultObject.setUnreadVoteSize(unreadVoteSize);
 
         return resultObject;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<VoteVo> listUserVotesByUserId(Long userId, int pageNum, int pageSize) {
+
+        List<VoteVo> resultList = new LinkedList<>();
+
+        NotifyExample notifyExample = new NotifyExample();
+        notifyExample.or().andRecevierIdEqualTo(userId).andTypeEqualTo("vote");
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行的查询生效
+        List<Notify> notifyList = notifyMapper.selectByExample(notifyExample);
+
+        // 拼接数据
+        VoteVo voteVo;
+        for (Notify notify : notifyList) {
+            voteVo = new VoteVo();
+            // 查询发送者的用户信息
+            User user = userMapper.selectByPrimaryKey(notify.getSenderId());
+            voteVo.setAvatar(user.getAvatar());
+            voteVo.setUserId(user.getId());
+            voteVo.setUsername(user.getUsername());
+            // 查询点赞博文信息
+            VoteExample voteExample = new VoteExample();
+            voteExample.or().andNotifyIdEqualTo(notify.getId());
+            Vote vote = voteMapper.selectByExample(voteExample).get(0);
+            BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(vote.getBlogId());
+            voteVo.setBlogId(vote.getBlogId());
+            voteVo.setBlogTitle(blogInfo.getTitle());
+            // 设置时间
+            voteVo.setCreateTime(notify.getCreateTime());
+            resultList.add(voteVo);
+        }
+
+        return resultList;
     }
 
     @Override
@@ -147,5 +185,15 @@ public class NotifyServiceImpl implements NotifyService {
         userFollowExample.or().andFollowUserIdEqualTo(userId);
 
         return userFollowMapper.countByExample(userFollowExample);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long countUserVotesByUserId(Long userId) {
+
+        NotifyExample notifyExample = new NotifyExample();
+        notifyExample.or().andRecevierIdEqualTo(userId).andTypeEqualTo("vote");
+
+        return notifyMapper.countByExample(notifyExample);
     }
 }
