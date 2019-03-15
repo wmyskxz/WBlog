@@ -194,6 +194,11 @@ public class UserServiceImpl implements UserService {
         vote.setBlogId(blogId);
         vote.setNotifyId(notify.getId());
         voteMapper.insertSelective(vote);
+
+        // 3.将对应博客的点赞数+1
+        BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
+        blogInfo.setVoteSize(blogInfo.getVoteSize() + 1);
+        blogInfoMapper.updateByPrimaryKeySelective(blogInfo);
     }
 
     @Override
@@ -202,5 +207,10 @@ public class UserServiceImpl implements UserService {
         VoteExample voteExample = new VoteExample();
         voteExample.or().andBlogIdEqualTo(blogId).andUserIdEqualTo(userId);
         voteMapper.deleteByExample(voteExample);
+
+        // 再把对应博文的点赞数-1
+        BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
+        blogInfo.setVoteSize(blogInfo.getVoteSize() - 1);
+        blogInfoMapper.updateByPrimaryKeySelective(blogInfo);
     }
 }
