@@ -8,9 +8,7 @@ package wmyskxz.blog.module.vo;
  */
 public class UserFollowVo extends UserInfoVo {
 
-    /**
-     * 包含UserInfo中的基础信息
-     */
+    /** 包含UserInfo中的基础信息 */
 
     // UI显示的数据
     private boolean isFollowed;// 是否关注该用户

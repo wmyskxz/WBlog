@@ -69,34 +69,66 @@ public class BlogController {
         return ResultUtil.success("修改文章成功!");
     }
 
-    // 获取最新的文章列表
-    @ApiOperation("获取最新的文章列表")
+    // 未登录 - 获取最新的文章列表
+    @ApiOperation("未登录 - 获取最新的文章列表")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/newest")
     public PageResultVo getNewestBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                        @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.listNewestBlogs(pageNum, pageSize), blogService.countAll());
+        return ResultUtil.table(blogService.listNewestBlogs(null, pageNum, pageSize), blogService.countAll());
     }
 
-    // 获取最热的文章列表
-    @ApiOperation("获取最热的文章列表")
+    // 登录 - 获取最新的文章列表
+    @ApiOperation("登录 - 获取最新的文章列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
+    @GetMapping("/newest/{userId}")
+    public PageResultVo getNewestBlogs(@PathVariable Long userId, @RequestParam(defaultValue = PAGE_NUM) int pageNum,
+                                       @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
+        return ResultUtil.table(blogService.listNewestBlogs(userId, pageNum, pageSize), blogService.countAll());
+    }
+
+    // 未登录 - 获取最热的文章列表
+    @ApiOperation("未登录 - 获取最热的文章列表")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/hotest")
     public PageResultVo getHotestBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                        @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.listHotestBlogs(pageNum, pageSize), blogService.countAll());
+        return ResultUtil.table(blogService.listHotestBlogs(null, pageNum, pageSize), blogService.countAll());
     }
 
-    // 获取推荐文章列表
-    @ApiOperation("获取最新推荐的文章列表")
+    // 登录 - 获取最热的文章列表
+    @ApiOperation("登录 - 获取最热的文章列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
+    @GetMapping("/hotest/{userId}")
+    public PageResultVo getHotestBlogs(@PathVariable Long userId, @RequestParam(defaultValue = PAGE_NUM) int pageNum,
+                                       @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
+        return ResultUtil.table(blogService.listHotestBlogs(userId, pageNum, pageSize), blogService.countAll());
+    }
+
+    // 未登录 - 获取推荐文章列表
+    @ApiOperation("未登录 - 获取最新推荐的文章列表")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/recommend")
     public PageResultVo getRecommendBlogs(@RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                           @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
-        return ResultUtil.table(blogService.listRecommendBlogs(pageNum, pageSize), blogService.countAllRecommend());
+        return ResultUtil
+                .table(blogService.listRecommendBlogs(null, pageNum, pageSize), blogService.countAllRecommend());
+    }
+
+    // 登录 - 获取推荐文章列表
+    @ApiOperation("登录 - 获取最新推荐的文章列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
+    @GetMapping("/recommend/{userId}")
+    public PageResultVo getRecommendBlogs(@PathVariable Long userId, @RequestParam(defaultValue = PAGE_NUM) int pageNum,
+                                          @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {
+        return ResultUtil
+                .table(blogService.listRecommendBlogs(userId, pageNum, pageSize), blogService.countAllRecommend());
     }
 
     // 获取某一篇博文详情
@@ -110,7 +142,7 @@ public class BlogController {
     @ApiOperation("获取某一个用户的推荐文章列表")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
-    @GetMapping("/recommend/{userId}")
+    @GetMapping("/recommend/user/{userId}")
     public PageResultVo getRecommendBlogsByUserId(@PathVariable("userId") Long userId,
                                                   @RequestParam(defaultValue = PAGE_NUM) int pageNum,
                                                   @RequestParam(defaultValue = PAGE_SIZE) int pageSize) {

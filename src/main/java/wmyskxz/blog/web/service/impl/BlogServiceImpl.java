@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wmyskxz.blog.module.dao.BlogCategoryMapper;
-import wmyskxz.blog.module.dao.BlogContentMapper;
-import wmyskxz.blog.module.dao.BlogInfoMapper;
-import wmyskxz.blog.module.dao.UserMapper;
+import wmyskxz.blog.module.dao.*;
 import wmyskxz.blog.module.entity.*;
 import wmyskxz.blog.module.vo.BlogInfoVo;
 import wmyskxz.blog.module.vo.BlogListVo;
@@ -31,6 +28,7 @@ public class BlogServiceImpl implements BlogService {
     @Resource UserMapper userMapper;
     @Resource BlogCategoryMapper blogCategoryMapper;
     @Resource BlogContentMapper blogContentMapper;
+    @Resource VoteMapper voteMapper;
 
     @Override
     @Transactional// 开启事务
@@ -70,7 +68,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> listNewestBlogs(int pageNum, int pageSize) {
+    public List<BlogListVo> listNewestBlogs(Long userId, int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
@@ -80,16 +78,16 @@ public class BlogServiceImpl implements BlogService {
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
-        resultList = joinBlogListVo(blogInfos);
+        resultList = joinBlogListVo(userId, blogInfos);
 
         return resultList;
     }
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> listHotestBlogs(int pageNum, int pageSize) {
+    public List<BlogListVo> listHotestBlogs(Long userId, int pageNum, int pageSize) {
 
-        List<BlogListVo> resultList = new LinkedList<>();
+        List<BlogListVo> resultList;
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.setOrderByClause("vote_size DESC");// 按照点赞数降序排列
@@ -97,14 +95,14 @@ public class BlogServiceImpl implements BlogService {
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
-        resultList = joinBlogListVo(blogInfos);
+        resultList = joinBlogListVo(userId, blogInfos);
 
         return resultList;
     }
 
     @Override
     @Transactional// 开启事务
-    public List<BlogListVo> listRecommendBlogs(int pageNum, int pageSize) {
+    public List<BlogListVo> listRecommendBlogs(Long userId, int pageNum, int pageSize) {
 
         List<BlogListVo> resultList = new LinkedList<>();
 
@@ -114,7 +112,7 @@ public class BlogServiceImpl implements BlogService {
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
         // 拼接数据
-        resultList = joinBlogListVo(blogInfos);
+        resultList = joinBlogListVo(userId, blogInfos);
 
         return resultList;
     }
@@ -252,10 +250,11 @@ public class BlogServiceImpl implements BlogService {
     /**
      * 按照传入的BlogInfo集合拼接需要的BlogListVo数据集合
      *
+     * @param userId
      * @param blogInfos
      * @return
      */
-    private List<BlogListVo> joinBlogListVo(List<BlogInfo> blogInfos) {
+    private List<BlogListVo> joinBlogListVo(Long userId, List<BlogInfo> blogInfos) {
         List<BlogListVo> resultList = new LinkedList<>();
 
         // 拼接数据
@@ -268,6 +267,15 @@ public class BlogServiceImpl implements BlogService {
             BeanUtils.copyProperties(user, blogListVo);
             // 将blogInfo中同blogListVo相同字段赋值给blogListVo
             BeanUtils.copyProperties(blogInfo, blogListVo);
+            // 按照是否有userId来设置isVote属性,如果为null则统一设置为false
+            if (null != userId) {
+                VoteExample voteExample = new VoteExample();
+                voteExample.or().andUserIdEqualTo(userId).andBlogIdEqualTo(blogInfo.getId());
+                if (voteMapper.selectByExample(voteExample).isEmpty()) {
+                    // 如果是空(没有点赞)
+                    blogListVo.setVote(false);
+                } else blogListVo.setVote(true);
+            } else blogListVo.setVote(false);
 
             resultList.add(blogListVo);
         }   // end for

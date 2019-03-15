@@ -49,28 +49,39 @@ public interface BlogService {
     /**
      * 首页 - 获取最新的文章列表
      *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<BlogListVo> listNewestBlogs(int pageNum, int pageSize);
+    List<BlogListVo> listNewestBlogs(Long userId, int pageNum, int pageSize);
 
     /**
      * 首页 - 获取最热的文章列表
      *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<BlogListVo> listHotestBlogs(int pageNum, int pageSize);
+    List<BlogListVo> listHotestBlogs(Long userId, int pageNum, int pageSize);
 
     /**
      * 首页 - 获取最新推荐的文章列表
      *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<BlogListVo> listRecommendBlogs(int pageNum, int pageSize);
+    List<BlogListVo> listRecommendBlogs(Long userId, int pageNum, int pageSize);
 
     /**
      * 个人主页 - 按照用户id来获取用户自定义的推荐文章列表
      *
      * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     List<BlogInfoVo> listRecommendBlogsByUserId(Long userId, int pageNum, int pageSize);

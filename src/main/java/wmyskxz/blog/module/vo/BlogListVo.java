@@ -19,6 +19,7 @@ public class BlogListVo {
     private int commentSize;// 评论数
     private int readSize;// 阅读数
     private Date createTime;// 创建时间
+    private Boolean isVote;// 是否已经点赞
 
     // UI隐藏的数据
     private Long userId;// 用户对应的主键id
@@ -102,5 +103,13 @@ public class BlogListVo {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getVote() {
+        return isVote;
+    }
+
+    public void setVote(Boolean vote) {
+        isVote = vote;
     }
 }
