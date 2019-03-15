@@ -1,5 +1,6 @@
 package wmyskxz.blog.web.service;
 
+import wmyskxz.blog.module.vo.FollowVo;
 import wmyskxz.blog.module.vo.NotifyVo;
 import wmyskxz.blog.module.vo.UserFollowVo;
 import wmyskxz.blog.module.vo.VoteVo;
@@ -74,4 +75,14 @@ public interface NotifyService {
      * @return
      */
     Long countUserVotesByUserId(Long userId);
+
+    /**
+     * 消息页(关注通知信息)
+     *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<FollowVo> listUserFollowNotifyByUserId(Long userId, int pageNum, int pageSize);
 }

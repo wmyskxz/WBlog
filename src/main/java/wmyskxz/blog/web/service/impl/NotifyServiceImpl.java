@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.*;
 import wmyskxz.blog.module.entity.*;
+import wmyskxz.blog.module.vo.FollowVo;
 import wmyskxz.blog.module.vo.NotifyVo;
 import wmyskxz.blog.module.vo.UserFollowVo;
 import wmyskxz.blog.module.vo.VoteVo;
@@ -195,5 +196,39 @@ public class NotifyServiceImpl implements NotifyService {
         notifyExample.or().andRecevierIdEqualTo(userId).andTypeEqualTo("vote");
 
         return notifyMapper.countByExample(notifyExample);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<FollowVo> listUserFollowNotifyByUserId(Long userId, int pageNum, int pageSize) {
+
+        List<FollowVo> resultList = new LinkedList<>();
+
+        UserFollowExample userFollowExample = new UserFollowExample();
+        userFollowExample.or().andFollowUserIdEqualTo(userId);
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行查询生效
+        List<UserFollow> userFollows = userFollowMapper.selectByExample(userFollowExample);
+
+        // 拼接数据
+        FollowVo followVo;
+        for (UserFollow userFollow : userFollows) {
+            followVo = new FollowVo();
+            User followUser = userMapper.selectByPrimaryKey(userFollow.getUserId());
+            followVo.setAvatar(followUser.getAvatar());
+            followVo.setUserId(followUser.getId());
+            followVo.setUsername(followUser.getUsername());
+            followVo.setCreateTime(userFollow.getCreateTime());
+            // 查询是否关注该用户
+            userFollowExample = new UserFollowExample();
+            userFollowExample.or().andUserIdEqualTo(userId).andFollowUserIdEqualTo(followUser.getId());
+
+            if (userFollowMapper.selectByExample(userFollowExample).isEmpty()) {
+                followVo.setFollow(false);
+            } else followVo.setFollow(true);
+
+            resultList.add(followVo);
+        }
+
+        return resultList;
     }
 }

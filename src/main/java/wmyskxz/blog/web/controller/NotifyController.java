@@ -60,13 +60,22 @@ public class NotifyController {
                                 notifyService.countUserFollowsByUserId(userId));
     }
 
-    // 查询某个用户的点赞信息
-    @ApiOperation("查询某个用户的点赞信息")
+    // 查询某个用户的点赞通知信息
+    @ApiOperation("查询某个用户的点赞通知信息")
     @GetMapping("/vote/{userId}")
     public PageResultVo listVotesByUserId(@PathVariable Long userId, @RequestParam int pageNum,
                                           @RequestParam int pageSize) {
         return ResultUtil.table(notifyService.listUserVotesByUserId(userId, pageNum, pageSize),
                                 notifyService.countUserVotesByUserId(userId));
+    }
+
+    // 查询某个用户的关注通知消息
+    @ApiOperation("查询某个用户的关注通知消息")
+    @GetMapping("/follow/{userId}")
+    public PageResultVo listFollowsNotifyByUserId(@PathVariable Long userId, @RequestParam int pageNum,
+                                                  @RequestParam int pageSize) {
+        return ResultUtil.table(notifyService.listUserFollowNotifyByUserId(userId, pageNum, pageSize),
+                                notifyService.countUserFansByUserId(userId));
     }
 
     // 某一个用户给某一篇博文点赞
@@ -77,4 +86,27 @@ public class NotifyController {
         return ResultUtil.success("成功!");
     }
 
+    // 某一个用户取消对一篇博文的点赞
+    @ApiOperation("某一个用户取消对一篇博文的点赞")
+    @PostMapping("/unvote/{userId}/{blogId}")
+    public ResponseVo unVote(@PathVariable Long userId, @PathVariable Long blogId) {
+        userService.unVote(userId, blogId);
+        return ResultUtil.success("成功取消点赞");
+    }
+
+    // 某一个用户关注另一个用户
+    @ApiOperation("某一个用户关注另一个用户")
+    @PostMapping("/follow/{userId}/{followUserId}")
+    public ResponseVo follow(@PathVariable Long userId, @PathVariable Long followUserId) {
+        userService.follow(userId, followUserId);
+        return ResultUtil.success("关注成功!");
+    }
+
+    // 某一个用户取消对一个用户的关注
+    @ApiOperation("某一个用户取消对一个用户的关注")
+    @PostMapping("/unfollow/{userId}/{followUserId}")
+    public ResponseVo unFollow(@PathVariable Long userId, @PathVariable Long followUserId) {
+        userService.unFollow(userId, followUserId);
+        return ResultUtil.success("成功取消关注");
+    }
 }
