@@ -263,11 +263,11 @@ public class BlogServiceImpl implements BlogService {
         for (BlogInfo blogInfo : blogInfos) {
             blogListVo = new BlogListVo();
             blogListVo.setBlogId(blogInfo.getId());
-            // 将blogInfo中同blogListVo相同字段赋值给blogListVo
-            BeanUtils.copyProperties(blogInfo, blogListVo);
             // 将blogInfo所属用户的信息赋值给blogListVo
             User user = userMapper.selectByPrimaryKey(blogInfo.getUserId());
             BeanUtils.copyProperties(user, blogListVo);
+            // 将blogInfo中同blogListVo相同字段赋值给blogListVo
+            BeanUtils.copyProperties(blogInfo, blogListVo);
 
             resultList.add(blogListVo);
         }   // end for
