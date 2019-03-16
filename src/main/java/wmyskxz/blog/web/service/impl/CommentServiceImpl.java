@@ -146,8 +146,9 @@ public class CommentServiceImpl implements CommentService {
         List<CommentVo> resultList = new LinkedList<>();
 
         // 拼接数据
-        CommentVo commentVo = new CommentVo();
+        CommentVo commentVo;
         for (Comment comment : comments) {
+            commentVo = new CommentVo();
             // 把Comment同CommentVo相同字段的数据赋值给CommentVo
             BeanUtils.copyProperties(comment, commentVo);
             // 拼接User数据
