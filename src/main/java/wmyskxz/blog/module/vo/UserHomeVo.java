@@ -10,7 +10,7 @@ public class UserHomeVo {
 
     // UI显示的数据
     private String avatar;// 用户头像地址
-    private String username;// 用户自定义名称
+    private String name;// 用户自定义名称
     private String description;// 自我介绍
     private int followSize;// 关注人数
     private int fanSize;// 粉丝数量
@@ -29,12 +29,12 @@ public class UserHomeVo {
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

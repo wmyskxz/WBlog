@@ -21,7 +21,7 @@ public class CommentVo {
     // UI隐藏的数据
     private Long userId;// 评论用户的主键id
     private Long blogId;// 评论文章的id
-    private Long atUserId;// @用户的用户id
+    private Long atId;// @用户的用户id
     private Long commentId;// 评论id
 
     public String getAvatar() {
@@ -72,12 +72,12 @@ public class CommentVo {
         this.userId = userId;
     }
 
-    public Long getAtUserId() {
-        return atUserId;
+    public Long getAtId() {
+        return atId;
     }
 
-    public void setAtUserId(Long atUserId) {
-        this.atUserId = atUserId;
+    public void setAtId(Long atId) {
+        this.atId = atId;
     }
 
     public Long getCommentId() {
