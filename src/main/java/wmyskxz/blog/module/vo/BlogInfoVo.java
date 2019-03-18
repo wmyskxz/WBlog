@@ -77,5 +77,11 @@ public class BlogInfoVo {
         this.blogId = blogId;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
 
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }
