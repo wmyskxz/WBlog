@@ -65,8 +65,9 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
 
         // 拼接数据
-        CategoryVo categoryVo = new CategoryVo();
+        CategoryVo categoryVo;
         for (Category category : categoryList) {
+            categoryVo = new CategoryVo();
             // 把Category类同CategoryVo的相同字段赋值给CategoryVo类
             BeanUtils.copyProperties(category, categoryVo);
             categoryVo.setCategoryId(category.getId());

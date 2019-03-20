@@ -2,6 +2,7 @@ package wmyskxz.blog.web.service;
 
 import wmyskxz.blog.module.entity.BlogContent;
 import wmyskxz.blog.module.entity.BlogInfo;
+import wmyskxz.blog.module.vo.BlogEditVo;
 import wmyskxz.blog.module.vo.BlogInfoVo;
 import wmyskxz.blog.module.vo.BlogListVo;
 import wmyskxz.blog.module.vo.BlogVo;
@@ -15,6 +16,23 @@ import java.util.List;
  * @date:2019/02/26 - 13:24
  */
 public interface BlogService {
+
+    /**
+     * 检查文章标题是否可用
+     *
+     * @param title
+     * @return
+     */
+    Boolean checkTitle(String title);
+
+    /**
+     * 获取在编辑博文时需要的数据
+     *
+     * @param blogId
+     * @return
+     */
+    BlogEditVo findBlogEditVoById(Long blogId);
+
 
     /**
      * 首页 - 获取系统中文章的总数

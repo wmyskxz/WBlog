@@ -154,6 +154,10 @@ public class CommentServiceImpl implements CommentService {
             // 拼接User数据
             User user = userMapper.selectByPrimaryKey(comment.getUserId());
             BeanUtils.copyProperties(user, commentVo);
+            if (comment.getAtId() != null) {
+                User atUser = userMapper.selectByPrimaryKey(comment.getAtId());
+                commentVo.setAtUsername(atUser.getUsername());
+            }
             // 拼接BlogInfo数据
             BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(comment.getBlogId());
             commentVo.setBlogTitle(blogInfo.getTitle());

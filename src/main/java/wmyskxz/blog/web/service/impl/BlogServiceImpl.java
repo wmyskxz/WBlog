@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.*;
 import wmyskxz.blog.module.entity.*;
+import wmyskxz.blog.module.vo.BlogEditVo;
 import wmyskxz.blog.module.vo.BlogInfoVo;
 import wmyskxz.blog.module.vo.BlogListVo;
 import wmyskxz.blog.module.vo.BlogVo;
@@ -29,6 +30,47 @@ public class BlogServiceImpl implements BlogService {
     @Resource BlogCategoryMapper blogCategoryMapper;
     @Resource BlogContentMapper blogContentMapper;
     @Resource VoteMapper voteMapper;
+
+    @Override
+    @Transactional// 开启事务
+    public Boolean checkTitle(String title) {
+
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or().andTitleEqualTo(title);
+        if (blogInfoMapper.selectByExample(blogInfoExample).isEmpty()) {
+            // 为空则表明没有用当前title的文章
+            return true;
+        } else return false;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public BlogEditVo findBlogEditVoById(Long blogId) {
+
+        BlogEditVo resultObject = new BlogEditVo();
+
+        // 查询Blog基础信息
+        BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
+        // 把blogInfo中同resultObject对象中的相同字段赋值给后者
+        // 还剩下contentMd/contentHtml/categoryId没有赋值了
+        BeanUtils.copyProperties(blogInfo, resultObject);
+        resultObject.setRecommend(blogInfo.getIsRecommend());
+
+        // 查询Blog内容信息
+        BlogContentExample blogContentExample = new BlogContentExample();
+        blogContentExample.or().andBlogIdEqualTo(blogId);
+        BlogContent blogContent = blogContentMapper.selectByExample(blogContentExample).get(0);
+        // 注入contentMd/contentHtml字段
+        BeanUtils.copyProperties(blogContent, resultObject);
+
+        BlogCategoryExample blogCategoryExample = new BlogCategoryExample();
+        blogCategoryExample.or().andBlogIdEqualTo(blogId);
+        BlogCategory blogCategory = blogCategoryMapper.selectByExample(blogCategoryExample).get(0);
+        // 注入categoryId字段
+        resultObject.setCategoryId(blogCategory.getCategoryId());
+
+        return resultObject;
+    }
 
     @Override
     @Transactional// 开启事务
@@ -121,7 +163,7 @@ public class BlogServiceImpl implements BlogService {
     @Transactional// 开启事务
     public List<BlogInfoVo> listRecommendBlogsByUserId(Long userId, int pageNum, int pageSize) {
 
-        List<BlogInfoVo> resultList = new LinkedList<>();
+        List<BlogInfoVo> resultList;
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andUserIdEqualTo(userId).andIsRecommendEqualTo(true);
@@ -183,6 +225,12 @@ public class BlogServiceImpl implements BlogService {
         BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
         // 将blogInfo中同BlogVo对象中相同的字段赋值给BlogVo
         BeanUtils.copyProperties(blogInfo, resultObject);
+        resultObject.setBlogId(blogInfo.getId());
+        // 添加内容
+        BlogContentExample blogContentExample = new BlogContentExample();
+        blogContentExample.or().andBlogIdEqualTo(blogId);
+        BlogContent blogContent = blogContentMapper.selectByExample(blogContentExample).get(0);
+        resultObject.setContentHtml(blogContent.getContentHtml());
         // 添加相关的用户信息
         User user = userMapper.selectByPrimaryKey(blogInfo.getUserId());
         BeanUtils.copyProperties(user, resultObject);
@@ -299,7 +347,7 @@ public class BlogServiceImpl implements BlogService {
             blogInfoVo = new BlogInfoVo();
             // 将blogInfo中同blogInfoVo相同字段赋值给blogInfoVo
             BeanUtils.copyProperties(blogInfo, blogInfoVo);
-
+            blogInfoVo.setBlogId(blogInfo.getId());
             resultList.add(blogInfoVo);
         }   // end for
 

@@ -32,6 +32,16 @@ public class UserServiceImpl implements UserService {
     @Resource BlogInfoMapper blogInfoMapper;
     @Resource VoteMapper voteMapper;
 
+
+    @Override
+    @Transactional// 开启事务
+    public Boolean checkUserName(String name) {
+        UserExample userExample = new UserExample();
+        userExample.or().andNameEqualTo(name);
+
+        return userMapper.selectByExample(userExample).isEmpty();
+    }
+
     @Override
     @Transactional// 开启事务
     public void register(String username, String password, String email) {
@@ -72,6 +82,15 @@ public class UserServiceImpl implements UserService {
         PasswordHelper.encryptPassword(user);
         user.setEmail(email);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public void update(Long userId, String name, String description) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        user.setName(name);
+        user.setDescription(description);
+        userMapper.updateByPrimaryKey(user);
     }
 
     @Override
@@ -222,7 +241,7 @@ public class UserServiceImpl implements UserService {
         UserHomeVo resultObject = new UserHomeVo();
         User user = userMapper.selectByPrimaryKey(userId);
         // 把user同resultObject相同的字段赋值给后者
-        // avatar/username/fanSize/followSize/voteSize/description
+        // avatar/name/fanSize/followSize/voteSize/description
         // 还剩下isFollow/blogSize/userId没有设置
         BeanUtils.copyProperties(user, resultObject);
         // 设置userId

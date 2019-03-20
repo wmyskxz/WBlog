@@ -13,6 +13,15 @@ import java.util.List;
  * @date:2019/02/26 - 15:19
  */
 public interface UserService {
+
+    /**
+     * 检查用户自定义的名称是否可用
+     *
+     * @param name
+     * @return
+     */
+    Boolean checkUserName(String name);
+
     /**
      * 注册新用户
      *
@@ -42,6 +51,15 @@ public interface UserService {
      * @param userId
      */
     void update(Long userId, String name, String password, String email);
+
+    /**
+     * 修改用户信息(前台) - 修改自定义名称and自我介绍
+     *
+     * @param userId
+     * @param name
+     * @param description
+     */
+    void update(Long userId, String name, String description);
 
     /**
      * 用户修改自定义名称
