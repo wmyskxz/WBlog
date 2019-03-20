@@ -13,11 +13,11 @@ public class BlogVo {
     // 用于UI显示的数据
     private String title;// 文章标题
     private String avatar;// 作者头像地址
-    private String username;// 作者自定义名称
+    private String name;// 作者自定义名称
     private int voteSize;// 喜欢数
     private int commentSize;// 评论数
     private int readSize;// 阅读数
-    private String contentHTML;// html版的内容
+    private String contentHtml;// html版的内容
     private Date createTime;// 文章创建时间
 
     // UI隐藏的数据
@@ -40,12 +40,12 @@ public class BlogVo {
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getVoteSize() {
@@ -72,12 +72,12 @@ public class BlogVo {
         this.readSize = readSize;
     }
 
-    public String getContentHTML() {
-        return contentHTML;
+    public String getContentHtml() {
+        return contentHtml;
     }
 
-    public void setContentHTML(String contentHTML) {
-        this.contentHTML = contentHTML;
+    public void setContentHtml(String contentHtml) {
+        this.contentHtml = contentHtml;
     }
 
     public Date getCreateTime() {
