@@ -5,10 +5,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ResultUtil;
 import wmyskxz.blog.web.service.UserService;
+
+import java.io.*;
 
 /**
  * 用户相关控制器
@@ -41,14 +44,23 @@ public class UserController {
         return ResultUtil.success("删除成功!");
     }
 
-    // 修改一个用户(后台)
-    @ApiOperation("修改一个用户(后台)")
-    @ApiImplicitParams({@ApiImplicitParam(name = "name", value = "用户自定义名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "password", value = "用户密码", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "email", value = "用户自定义密码", required = true, dataType = "String")})
+    // // 修改一个用户(后台)
+    // @ApiOperation("修改一个用户(后台)")
+    // @ApiImplicitParams({@ApiImplicitParam(name = "name", value = "用户自定义名称", required = true, dataType = "String"),
+    //         @ApiImplicitParam(name = "password", value = "用户密码", required = true, dataType = "String"),
+    //         @ApiImplicitParam(name = "email", value = "用户自定义密码", required = true, dataType = "String")})
+    // @PutMapping("/{userId}")
+    // public ResponseVo update(@PathVariable Long userId, String name, String password, String email) {
+    //     userService.update(userId, name, password, email);
+    //     return ResultUtil.success("修改成功!");
+    // }
+
+
+    // 修改一个用户(前台)
+    @ApiOperation("修改一个用户(前台)")
     @PutMapping("/{userId}")
-    public ResponseVo update(@PathVariable Long userId, String name, String password, String email) {
-        userService.update(userId, name, password, email);
+    public ResponseVo update(@PathVariable Long userId, String name, String description) {
+        userService.update(userId, name, description);
         return ResultUtil.success("修改成功!");
     }
 
@@ -76,4 +88,30 @@ public class UserController {
         return ResultUtil.success("查询成功!", userService.findUserHomeInfoById(userId, visitUserId));
     }
 
+    // 更改头像测试类
+    @PostMapping("/avatar/{userId}")
+    public ResponseVo uploadAvatar(@PathVariable Long userId, @RequestParam("file") MultipartFile file) {
+        if (!file.isEmpty()) {
+            try {
+                File path = new File("src/main/resources/static/avatar/" + userId + "/");
+                if (!path.exists()) {
+                    // 不存在则先创建出来
+                    path.mkdirs();
+                }
+                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(path, "avatar.jpg")));
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return ResultUtil.success("上传失败," + e.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResultUtil.success("上传失败," + e.getMessage());
+            }
+            return ResultUtil.success("上传成功");
+        } else {
+            return ResultUtil.success("上传失败，因为文件是空的.");
+        }
+    }
 }
