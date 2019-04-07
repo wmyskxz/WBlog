@@ -113,6 +113,16 @@ public interface BlogService {
     List<BlogInfoVo> listByUserId(Long userId, int pageNum, int pageSize);
 
     /**
+     * 个人主页 -  获取用户的最热文章
+     *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<BlogInfoVo> listHotestByUserId(Long userId, int pageNum, int pageSize);
+
+    /**
      * 个人主页(博客页) - 按照分类id(唯一)来获取文章列表
      *
      * @param categoryId

@@ -2,14 +2,17 @@ package wmyskxz.blog.web.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.*;
+import wmyskxz.blog.module.dao.es.EsBlogRepository;
 import wmyskxz.blog.module.entity.*;
 import wmyskxz.blog.module.vo.BlogEditVo;
 import wmyskxz.blog.module.vo.BlogInfoVo;
 import wmyskxz.blog.module.vo.BlogListVo;
 import wmyskxz.blog.module.vo.BlogVo;
+import wmyskxz.blog.module.vo.es.EsBlog;
 import wmyskxz.blog.web.service.BlogService;
 
 import javax.annotation.Resource;
@@ -30,6 +33,7 @@ public class BlogServiceImpl implements BlogService {
     @Resource BlogCategoryMapper blogCategoryMapper;
     @Resource BlogContentMapper blogContentMapper;
     @Resource VoteMapper voteMapper;
+    @Autowired EsBlogRepository esBlogRepository;
 
     @Override
     @Transactional// 开启事务
@@ -223,6 +227,9 @@ public class BlogServiceImpl implements BlogService {
         BlogVo resultObject = new BlogVo();
 
         BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
+        // 添加相关的用户信息
+        User user = userMapper.selectByPrimaryKey(blogInfo.getUserId());
+        BeanUtils.copyProperties(user, resultObject);
         // 将blogInfo中同BlogVo对象中相同的字段赋值给BlogVo
         BeanUtils.copyProperties(blogInfo, resultObject);
         resultObject.setBlogId(blogInfo.getId());
@@ -231,9 +238,13 @@ public class BlogServiceImpl implements BlogService {
         blogContentExample.or().andBlogIdEqualTo(blogId);
         BlogContent blogContent = blogContentMapper.selectByExample(blogContentExample).get(0);
         resultObject.setContentHtml(blogContent.getContentHtml());
-        // 添加相关的用户信息
-        User user = userMapper.selectByPrimaryKey(blogInfo.getUserId());
-        BeanUtils.copyProperties(user, resultObject);
+
+        // 阅读数加1
+        blogInfo.setReadSize(blogInfo.getReadSize() + 1);
+        blogInfoMapper.updateByPrimaryKeySelective(blogInfo);
+        EsBlog esBlog = esBlogRepository.findById(blogId).get();
+        esBlog.setReadSize(blogInfo.getReadSize());
+        esBlogRepository.save(esBlog);
 
         return resultObject;
     }
@@ -254,6 +265,13 @@ public class BlogServiceImpl implements BlogService {
         blogCategory.setBlogId(blogInfo.getId());
         blogCategory.setCategoryId(categoryId);
         blogCategoryMapper.insertSelective(blogCategory);
+
+        // 4.往Es中塞数据
+        EsBlog esBlog = new EsBlog();
+        BeanUtils.copyProperties(blogInfo, esBlog);
+        esBlog.setBlogId(blogInfo.getId());
+        esBlog.setContent(blogContent.getContentHtml());
+        esBlogRepository.save(esBlog);
     }
 
     @Override
@@ -273,6 +291,8 @@ public class BlogServiceImpl implements BlogService {
         blogCategoryExample.or().andBlogIdEqualTo(blogId);
         blogCategoryMapper.deleteByExample(blogCategoryExample);
 
+        // 4.删除es中的数据
+        esBlogRepository.deleteById(blogId);
     }
 
     @Override
@@ -293,6 +313,13 @@ public class BlogServiceImpl implements BlogService {
         BlogCategory blogCategory = blogCategoryMapper.selectByExample(blogCategoryExample).get(0);
         blogCategory.setCategoryId(categoryId);
         blogCategoryMapper.updateByPrimaryKeySelective(blogCategory);
+
+        // 4.更新es中的数据
+        EsBlog esBlog = new EsBlog();
+        BeanUtils.copyProperties(blogInfo, esBlog);
+        esBlog.setBlogId(blogInfo.getId());
+        esBlog.setContent(blogContent.getContentHtml());
+        esBlogRepository.save(esBlog);
     }
 
     /**
@@ -350,6 +377,24 @@ public class BlogServiceImpl implements BlogService {
             blogInfoVo.setBlogId(blogInfo.getId());
             resultList.add(blogInfoVo);
         }   // end for
+
+        return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<BlogInfoVo> listHotestByUserId(Long userId, int pageNum, int pageSize) {
+
+        List<BlogInfoVo> resultList;
+
+        BlogInfoExample blogInfoExample = new BlogInfoExample();
+        blogInfoExample.or().andUserIdEqualTo(userId);
+        blogInfoExample.setOrderByClause("vote_size DESC");// 按照点赞数降序排列
+        PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
+        List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
+
+        // 拼接数据
+        resultList = joinBlogInfoVo(blogInfos);
 
         return resultList;
     }

@@ -19,12 +19,8 @@ public interface EsBlogRepository extends ElasticsearchRepository<EsBlog, Long> 
      * @param title
      * @param summary
      * @param content
-     * @param username
      * @return
      */
-    List<EsBlog> findByTitleContainingOrSummaryContainingOrContentContainingOrUsernameContaining(String title,
-                                                                                                 String summary,
-                                                                                                 String content,
-                                                                                                 String username,
-                                                                                                 Pageable pageable);
+    List<EsBlog> findByTitleLikeOrSummaryLikeOrContentLike(String title, String summary, String content,
+                                                           Pageable pageable);
 }

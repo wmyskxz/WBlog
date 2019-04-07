@@ -22,8 +22,9 @@ public class EsBlog implements Serializable {
     private String title;// 博客标题
     private String summary;// 博客简介
     private String content;// 博文内容
-    private Long userId;// 博主id
-    private String username;// 博主名字
+    private Integer voteSize;// 点赞数量
+    private Integer readSize;// 阅读数
+    private Integer commentSize;// 评论数量
 
     public Long getBlogId() {
         return blogId;
@@ -49,27 +50,35 @@ public class EsBlog implements Serializable {
         this.summary = summary;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getVoteSize() {
+        return voteSize;
+    }
+
+    public void setVoteSize(Integer voteSize) {
+        this.voteSize = voteSize;
+    }
+
+    public Integer getReadSize() {
+        return readSize;
+    }
+
+    public void setReadSize(Integer readSize) {
+        this.readSize = readSize;
+    }
+
+    public Integer getCommentSize() {
+        return commentSize;
+    }
+
+    public void setCommentSize(Integer commentSize) {
+        this.commentSize = commentSize;
     }
 }
