@@ -9,7 +9,7 @@ package wmyskxz.blog.module.vo;
 public class UserInfoVo {
 
     // 用于UI显示的数据
-    private String username;// 用户自定义的名称
+    private String name;// 用户自定义的名称
     private String avatar;// 用户头像图片地址
     private int fanSize;// 用户粉丝数量
     private int followSize;// 用户关注数量
@@ -18,12 +18,12 @@ public class UserInfoVo {
     // UI隐藏的数据
     private Long userId;// 用户的主键id
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAvatar() {

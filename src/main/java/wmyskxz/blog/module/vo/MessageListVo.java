@@ -11,7 +11,7 @@ import java.util.Date;
 public class MessageListVo {
     // UI显示的数据
     private String avatar;// 用户头像地址
-    private String username;// 用户自定义名称
+    private String name;// 用户自定义名称
     private Date lastChatTime;// 最后一次聊天时间
     private String lastChatContent;// 最后一次说话的内容
 
@@ -26,12 +26,12 @@ public class MessageListVo {
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String username) {
+        this.name = username;
     }
 
     public Date getLastChatTime() {
