@@ -93,8 +93,8 @@ public class PermissionController {
         return ResultUtil.success("操作成功!");
     }
 
-    // 修改一个角色
-    @ApiOperation("修改一个角色")
+    // 修改一个角色(包括权限)
+    @ApiOperation("修改一个角色(包括权限)")
     @ApiImplicitParams({@ApiImplicitParam(name = "name", value = "角色名称,如:admin", required = true,
             dataType = "String"), @ApiImplicitParam(name = "description", value = "角色描述,UI显示,如:管理员", required = true,
             dataType = "String"), @ApiImplicitParam(name = "permissionIds", value = "选中的权限的id集合", required = true,
