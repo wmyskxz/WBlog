@@ -15,6 +15,29 @@ import java.util.List;
 public interface UserService {
 
     /**
+     * 查询在线用户
+     *
+     * @return
+     */
+    List<User> selectOnlineUsers();
+
+    /**
+     * 注册 - 检查用户Email是否可用
+     *
+     * @param email
+     * @return
+     */
+    Boolean checkEmail(String email);
+
+    /**
+     * 注册 - 检查用户账号是否可用
+     *
+     * @param username
+     * @return
+     */
+    Boolean checkUsername(String username);
+
+    /**
      * 检查用户自定义的名称是否可用
      *
      * @param name

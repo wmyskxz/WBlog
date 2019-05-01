@@ -154,6 +154,7 @@ public class BlogServiceImpl implements BlogService {
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andIsRecommendEqualTo(true);
+        blogInfoExample.setOrderByClause("create_time DESC");// 设置按照创建时间降序排列
         PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
@@ -183,10 +184,12 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional// 开启事务
     public List<BlogInfoVo> listByUserId(Long userId, int pageNum, int pageSize) {
-        List<BlogInfoVo> resultList = new LinkedList<>();
+
+        List<BlogInfoVo> resultList;
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andUserIdEqualTo(userId);
+        blogInfoExample.setOrderByClause("create_time DESC");// 设置按照创建时间降序排列
         PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
@@ -200,10 +203,11 @@ public class BlogServiceImpl implements BlogService {
     @Transactional// 开启事务
     public List<BlogInfoVo> listByCategoryId(Long categoryId, int pageNum, int pageSize) {
 
-        List<BlogInfoVo> resultList = new LinkedList<>();
+        List<BlogInfoVo> resultList;
 
         BlogCategoryExample blogCategoryExample = new BlogCategoryExample();
         blogCategoryExample.or().andCategoryIdEqualTo(categoryId);
+        blogCategoryExample.setOrderByClause("create_time DESC");// 设置按照创建时间降序排列
         PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogCategory> blogCategoryList = blogCategoryMapper.selectByExample(blogCategoryExample);
 

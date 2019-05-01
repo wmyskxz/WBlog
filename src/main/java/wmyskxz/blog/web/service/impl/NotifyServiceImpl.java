@@ -38,7 +38,7 @@ public class NotifyServiceImpl implements NotifyService {
         NotifyVo resultObject = new NotifyVo();
 
         NotifyExample notifyExample = new NotifyExample();
-        notifyExample.or().andIsReadEqualTo(false);
+        notifyExample.or().andIsReadEqualTo(false).andRecevierIdEqualTo(userId);
         List<Notify> notifyList = notifyMapper.selectByExample(notifyExample);
 
         // 根据不同类型统计各种通知的数量
@@ -109,6 +109,7 @@ public class NotifyServiceImpl implements NotifyService {
 
         UserFollowExample userFollowExample = new UserFollowExample();
         userFollowExample.or().andUserIdEqualTo(userId);
+        userFollowExample.setOrderByClause("create_time DESC");// 按照创建时间降序排列
         PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
         List<UserFollow> userFollows = userFollowMapper.selectByExample(userFollowExample);
 
@@ -119,6 +120,11 @@ public class NotifyServiceImpl implements NotifyService {
             User followUser = userMapper.selectByPrimaryKey(userFollow.getFollowUserId());
             // 把FollowUser中同UserFollowVo中相同名称字段的数据copy到后者当中去
             BeanUtils.copyProperties(followUser, userFollowVo);
+            userFollowVo.setUserId(followUser.getId());
+            // 查询文章数量
+            BlogInfoExample blogInfoExample = new BlogInfoExample();
+            blogInfoExample.or().andUserIdEqualTo(followUser.getId());
+            userFollowVo.setBlogSize(Math.toIntExact(blogInfoMapper.countByExample(blogInfoExample)));
             // 查询followUser是否关注自己
             userFollowExample = new UserFollowExample();
             userFollowExample.or().andUserIdEqualTo(followUser.getId()).andFollowUserIdEqualTo(userId);
@@ -142,6 +148,7 @@ public class NotifyServiceImpl implements NotifyService {
 
         UserFollowExample userFollowExample = new UserFollowExample();
         userFollowExample.or().andFollowUserIdEqualTo(userId);
+        userFollowExample.setOrderByClause("create_time DESC");// 按照创建时间降序排列
         PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
         List<UserFollow> userFans = userFollowMapper.selectByExample(userFollowExample);
 
@@ -149,9 +156,14 @@ public class NotifyServiceImpl implements NotifyService {
         UserFollowVo userFollowVo;
         for (UserFollow userFollow : userFans) {
             userFollowVo = new UserFollowVo();
-            User fanUser = userMapper.selectByPrimaryKey(userFollow.getFollowUserId());
+            User fanUser = userMapper.selectByPrimaryKey(userFollow.getUserId());
             // 把FollowUser中同UserFollowVo中相同名称字段的数据copy到后者当中去
             BeanUtils.copyProperties(fanUser, userFollowVo);
+            userFollowVo.setUserId(fanUser.getId());
+            // 查询文章数量
+            BlogInfoExample blogInfoExample = new BlogInfoExample();
+            blogInfoExample.or().andUserIdEqualTo(fanUser.getId());
+            userFollowVo.setBlogSize(Math.toIntExact(blogInfoMapper.countByExample(blogInfoExample)));
             // 查询自己是否关注了fanUser
             userFollowExample = new UserFollowExample();
             userFollowExample.or().andUserIdEqualTo(userId).andFollowUserIdEqualTo(fanUser.getId());
@@ -230,5 +242,18 @@ public class NotifyServiceImpl implements NotifyService {
         }
 
         return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public void readAllByUserIdAndType(Long userId, String type) {
+        NotifyExample notifyExample = new NotifyExample();
+        notifyExample.or().andRecevierIdEqualTo(userId).andIsReadEqualTo(false).andTypeEqualTo(type);
+        List<Notify> notifyList = notifyMapper.selectByExample(notifyExample);
+
+        for (Notify notify : notifyList) {
+            notify.setIsRead(true);
+            notifyMapper.updateByPrimaryKeySelective(notify);
+        }   // end for
     }
 }

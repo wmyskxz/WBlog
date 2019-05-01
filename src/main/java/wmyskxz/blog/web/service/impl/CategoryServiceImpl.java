@@ -29,11 +29,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional// 开启事务
-    public void add(String name, Long userId) {
+    public Boolean checkCategoryName(String name) {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.or().andNameEqualTo(name);
+
+        return categoryMapper.selectByExample(categoryExample).isEmpty();
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public Long add(String name, Long userId) {
         Category category = new Category();
         category.setName(name);
         category.setUserId(userId);
         categoryMapper.insertSelective(category);
+        return category.getId();
     }
 
     @Override

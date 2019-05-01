@@ -18,7 +18,7 @@ public interface RoleService {
      * @param name
      * @param description
      */
-    void add(String name, String description);
+    Long add(String name, String description);
 
     /**
      * 给用户赋予一个角色

@@ -31,11 +31,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public void add(String name, String description) {
+    public Long add(String name, String description) {
         Role role = new Role();
         role.setName(name);
         role.setDescription(description);
         roleMapper.insertSelective(role);
+        return role.getId();
     }
 
     @Override
@@ -127,7 +128,7 @@ public class RoleServiceImpl implements RoleService {
         role.setName(name);
         role.setDescription(description);
         role.setId(roleId);
-        roleMapper.updateByPrimaryKey(role);
+        roleMapper.updateByPrimaryKeySelective(role);
     }
 
     @Override

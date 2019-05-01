@@ -85,4 +85,14 @@ public interface NotifyService {
      * @return
      */
     List<FollowVo> listUserFollowNotifyByUserId(Long userId, int pageNum, int pageSize);
+
+    /**
+     * 把用户所有type类型的未读消息设置为已读
+     *
+     * @param userId
+     * @param type
+     */
+    void readAllByUserIdAndType(Long userId, String type);
+
+
 }

@@ -117,7 +117,7 @@ public class MessageServiceImpl implements MessageService {
             // I.查询用户的相关信息
             User user = userMapper.selectByPrimaryKey(counterpartId);
             messageListVo.setAvatar(user.getAvatar());
-            messageListVo.setUsername(user.getUsername());
+            messageListVo.setName(user.getName());
             messageListVo.setCounterpartId(counterpartId);
             // II.查询最后一次聊天的时间和内容
             messageExample = new MessageExample();

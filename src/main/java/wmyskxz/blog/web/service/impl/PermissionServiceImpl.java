@@ -29,8 +29,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     @Transactional// 开启事务
-    public void add(Permission permission) {
+    public Long add(Permission permission) {
         permissionMapper.insertSelective(permission);
+        return permission.getId();
     }
 
     @Override
@@ -101,7 +102,7 @@ public class PermissionServiceImpl implements PermissionService {
 
         Set<String> resultList = new LinkedHashSet<>();
 
-        List<UserRole> userRoleList = new LinkedList<>();
+        List<UserRole> userRoleList;
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.or().andUserIdEqualTo(userId);
         userRoleList = userRoleMapper.selectByExample(userRoleExample);
@@ -110,6 +111,26 @@ public class PermissionServiceImpl implements PermissionService {
             List<Permission> permissions = listByRoleId(userRole.getRoleId());
             for (Permission permission : permissions) {
                 resultList.add(permission.getName());
+            }
+        }   // end for
+
+        return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<Permission> listByUserId(Long userId) {
+        List<Permission> resultList = new LinkedList<>();
+
+        List<UserRole> userRoleList;
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.or().andUserIdEqualTo(userId);
+        userRoleList = userRoleMapper.selectByExample(userRoleExample);
+
+        for (UserRole userRole : userRoleList) {
+            List<Permission> permissions = listByRoleId(userRole.getRoleId());
+            for (Permission permission : permissions) {
+                resultList.add(permission);
             }
         }   // end for
 

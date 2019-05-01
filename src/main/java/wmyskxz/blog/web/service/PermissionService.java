@@ -16,8 +16,9 @@ public interface PermissionService {
      * 添加权限信息
      *
      * @param permission
+     * @return
      */
-    void add(Permission permission);
+    Long add(Permission permission);
 
     /**
      * 给角色赋予权限
@@ -65,12 +66,18 @@ public interface PermissionService {
     List<Permission> listByRoleId(Long roleId);
 
     /**
-     * 获取某一个用户的所有权限信息
+     * 获取某一个用户的所有权限信息(Shiro)
      *
      * @param userId
      * @return
      */
     Set<String> listPermsByUserId(Long userId);
 
-
+    /**
+     * 获取某一个用户的所有权限信息(后台)
+     *
+     * @param userId
+     * @return
+     */
+    List<Permission> listByUserId(Long userId);
 }

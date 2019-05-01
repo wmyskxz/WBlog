@@ -11,13 +11,22 @@ import java.util.List;
  * @date:2019/02/26 - 15:06
  */
 public interface CategoryService {
+
+    /**
+     * 检查分类名称是否可用
+     *
+     * @param name
+     * @return
+     */
+    Boolean checkCategoryName(String name);
+
     /**
      * 增加分类(不允许同一个用户创建相同的分类名称)
      *
      * @param name
      * @param userId
      */
-    void add(String name, Long userId);
+    Long add(String name, Long userId);
 
     /**
      * 通过categoryId删除对应的分类(如果该分类下还有文章则默认不允许删除)

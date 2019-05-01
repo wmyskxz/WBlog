@@ -24,8 +24,6 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<EsBlog> search(String keyword, int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        return esBlogRepository
-                .findByTitleContainingOrSummaryContainingOrContentContainingOrUsernameContaining(keyword, keyword,
-                                                                                                 keyword, keyword,pageable);
+        return esBlogRepository.findByTitleLikeOrSummaryLikeOrContentLike(keyword, keyword, keyword, pageable);
     }
 }
