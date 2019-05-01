@@ -1,6 +1,7 @@
 package wmyskxz.blog.web.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wmyskxz.blog.module.dao.PermissionMapper;
@@ -8,6 +9,7 @@ import wmyskxz.blog.module.dao.RoleMapper;
 import wmyskxz.blog.module.dao.RolePermissionMapper;
 import wmyskxz.blog.module.dao.UserRoleMapper;
 import wmyskxz.blog.module.entity.*;
+import wmyskxz.blog.web.service.PermissionService;
 import wmyskxz.blog.web.service.RoleService;
 
 import javax.annotation.Resource;
@@ -28,6 +30,7 @@ public class RoleServiceImpl implements RoleService {
     @Resource UserRoleMapper userRoleMapper;
     @Resource RolePermissionMapper rolePermissionMapper;
     @Resource PermissionMapper permissionMapper;
+    @Autowired PermissionService permissionService;
 
     @Override
     @Transactional// 开启事务
@@ -123,12 +126,15 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional// 开启事务
-    public void update(String name, String description, Long roleId) {
+    public void update(String name, String description, Long roleId, Long[] permissionIds) {
         Role role = new Role();
         role.setName(name);
         role.setDescription(description);
         role.setId(roleId);
         roleMapper.updateByPrimaryKeySelective(role);
+        for (Long permissionId : permissionIds) {
+            permissionService.givePermission(roleId, permissionId);
+        }
     }
 
     @Override

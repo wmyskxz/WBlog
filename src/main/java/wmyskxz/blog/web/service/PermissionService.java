@@ -1,6 +1,7 @@
 package wmyskxz.blog.web.service;
 
 import wmyskxz.blog.module.entity.Permission;
+import wmyskxz.blog.module.vo.AdminRolePermissionVo;
 
 import java.util.List;
 import java.util.Set;
@@ -64,6 +65,15 @@ public interface PermissionService {
      * @return
      */
     List<Permission> listByRoleId(Long roleId);
+
+    /**
+     * 编辑角色时返回该角色拥有的权限数据模型
+     * 简单表示：xxx1(√),xxx2(√),xxx3(×)
+     *
+     * @param roleId
+     * @return
+     */
+    List<AdminRolePermissionVo> listByRoleIdForEdit(Long roleId);
 
     /**
      * 获取某一个用户的所有权限信息(Shiro)

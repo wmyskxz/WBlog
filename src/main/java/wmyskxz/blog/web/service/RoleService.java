@@ -59,12 +59,12 @@ public interface RoleService {
 
     /**
      * 更新角色信息
-     *
-     * @param name
+     *  @param name
      * @param description
      * @param roleId
+     * @param permissionIds
      */
-    void update(String name, String description, Long roleId);
+    void update(String name, String description, Long roleId, Long[] permissionIds);
 
     /**
      * 返回所有的角色信息

@@ -6,6 +6,7 @@ import wmyskxz.blog.module.dao.PermissionMapper;
 import wmyskxz.blog.module.dao.RolePermissionMapper;
 import wmyskxz.blog.module.dao.UserRoleMapper;
 import wmyskxz.blog.module.entity.*;
+import wmyskxz.blog.module.vo.AdminRolePermissionVo;
 import wmyskxz.blog.web.service.PermissionService;
 
 import javax.annotation.Resource;
@@ -135,5 +136,42 @@ public class PermissionServiceImpl implements PermissionService {
         }   // end for
 
         return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<AdminRolePermissionVo> listByRoleIdForEdit(Long roleId) {
+        List<AdminRolePermissionVo> resultList = new LinkedList<>();
+
+        List<Permission> permissionList = listAll();
+        List<Permission> permissionListByRoleId = listByRoleId(roleId);
+        AdminRolePermissionVo adminRolePermissionVo;
+        for (Permission permission : permissionList) {
+            adminRolePermissionVo = new AdminRolePermissionVo();
+            adminRolePermissionVo.setPermissionId(permission.getId());
+            adminRolePermissionVo.setDescription(permission.getDescription());
+            adminRolePermissionVo.setHave(isHave(permissionListByRoleId, permission));
+
+            resultList.add(adminRolePermissionVo);
+        }   // end for
+
+        return resultList;
+    }
+
+    /**
+     * 判断当前角色是否拥有该权限 - 简单判断id相同即拥有
+     *
+     * @param permissionList
+     * @param permission
+     * @return
+     */
+    private Boolean isHave(List<Permission> permissionList, Permission permission) {
+        Long permissionId = permission.getId();
+        for (Permission p : permissionList) {
+            if (p.getId().equals(permissionId)) {
+                return true;
+            }
+        }   // end for:遍历完了permissionList仍然没找到
+        return false;
     }
 }

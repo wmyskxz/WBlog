@@ -97,11 +97,12 @@ public class PermissionController {
     @ApiOperation("修改一个角色")
     @ApiImplicitParams({@ApiImplicitParam(name = "name", value = "角色名称,如:admin", required = true,
             dataType = "String"), @ApiImplicitParam(name = "description", value = "角色描述,UI显示,如:管理员", required = true,
-            dataType = "String")})
+            dataType = "String"), @ApiImplicitParam(name = "permissionIds", value = "选中的权限的id集合", required = true,
+            dataType = "Long[]")})
     @PutMapping("/role/{roleId}")
-    public ResponseVo updateRole(@PathVariable Long roleId, @RequestParam String name,
-                                 @RequestParam String description) {
-        roleService.update(name, description, roleId);
+    public ResponseVo updateRole(@PathVariable Long roleId, @RequestParam String name, @RequestParam String description,
+                                 @RequestParam Long[] permissionIds) {
+        roleService.update(name, description, roleId, permissionIds);
         return ResultUtil.success("操作成功!");
     }
 
@@ -142,11 +143,18 @@ public class PermissionController {
         return ResultUtil.table(permissionService.listAll(), ConstCode.DEFAULT_NO_PAGING);
     }
 
-    // 查询一个角色拥有的权限信息
-    @ApiOperation("查询一个角色拥有的权限信息")
+    // 查询一个角色拥有的权限信息，用于侧边栏
+    @ApiOperation("查询一个角色拥有的权限信息，用于侧边栏")
     @GetMapping("/permission/{roleId}")
     public PageResultVo listPermissionsByRoleId(@PathVariable Long roleId) {
         return ResultUtil.table(permissionService.listByRoleId(roleId), ConstCode.DEFAULT_NO_PAGING);
+    }
+
+    // 编辑一个角色时返回的权限信息
+    @ApiOperation("编辑一个角色时返回的权限信息")
+    @GetMapping("/permission/{roleId}/edit")
+    public PageResultVo editRole(@PathVariable Long roleId) {
+        return ResultUtil.table(permissionService.listByRoleIdForEdit(roleId), ConstCode.DEFAULT_NO_PAGING);
     }
 
     // 查询一个用户所拥有的权限信息
