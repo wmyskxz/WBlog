@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wmyskxz.blog.module.entity.User;
 import wmyskxz.blog.module.vo.base.ResponseVo;
+import wmyskxz.blog.util.ResultUtil;
 import wmyskxz.blog.web.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 /**
  * 系统相关控制器
@@ -28,43 +28,51 @@ public class SystemController {
 
     @Autowired UserService userService;
 
-    /** 提交注册 */
     @PostMapping("/register")
     @ResponseBody
-    public ResponseVo register(HttpServletRequest request, User registerUser, String confirmPassword,
-                               String verification) {
-        // //判断验证码
-        // String rightCode = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        // if (StringUtils.isNotBlank(verification) && StringUtils.isNotBlank(rightCode) && verification.equals
-        // (rightCode)) {
-        //     //验证码通过
-        // } else {
-        //     return ResultUtil.error("验证码错误！");
-        // }
-        String username = registerUser.getUsername();
-        User user = userService.findByUsername(username);
-        if (null != user) {
-            // return ResultUtil.error("用户名已存在！");
-        }
-        String password = registerUser.getPassword();
-        // 判断两次输入密码是否相等
-        if (confirmPassword != null && password != null) {
-            if (!confirmPassword.equals(password)) {
-                // return ResultUtil.error("两次密码不一致！");
-            }
-        }
-        // registerUser.setSalt();
-        Date date = new Date();
-        // PasswordHelper.encryptPassword(registerUser);
-        // 注册
-        // int registerResult = userService.register(registerUser);
-        // if(registerResult > 0){
-        //     return ResultUtil.success("注册成功！");
-        // }else {
-        //     return ResultUtil.error("注册失败，请稍后再试！");
-        // }
-        return null;
+    public ResponseVo register(String username, String password, String email) {
+        userService.register(username, password, email);
+        return ResultUtil.success("注册成功!");
     }
+
+    //
+    // /** 提交注册 */
+    // @PostMapping("/register")
+    // @ResponseBody
+    // public ResponseVo register(HttpServletRequest request, User registerUser, String confirmPassword,
+    //                            String verification) {
+    //     // //判断验证码
+    //     // String rightCode = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+    //     // if (StringUtils.isNotBlank(verification) && StringUtils.isNotBlank(rightCode) && verification.equals
+    //     // (rightCode)) {
+    //     //     //验证码通过
+    //     // } else {
+    //     //     return ResultUtil.error("验证码错误！");
+    //     // }
+    //     String username = registerUser.getUsername();
+    //     User user = userService.findByUsername(username);
+    //     if (null != user) {
+    //         // return ResultUtil.error("用户名已存在！");
+    //     }
+    //     String password = registerUser.getPassword();
+    //     // 判断两次输入密码是否相等
+    //     if (confirmPassword != null && password != null) {
+    //         if (!confirmPassword.equals(password)) {
+    //             // return ResultUtil.error("两次密码不一致！");
+    //         }
+    //     }
+    //     // registerUser.setSalt();
+    //     Date date = new Date();
+    //     // PasswordHelper.encryptPassword(registerUser);
+    //     // 注册
+    //     // int registerResult = userService.register(registerUser);
+    //     // if(registerResult > 0){
+    //     //     return ResultUtil.success("注册成功！");
+    //     // }else {
+    //     //     return ResultUtil.error("注册失败，请稍后再试！");
+    //     // }
+    //     return null;
+    // }
 
     /** 提交登录 */
     @PostMapping("/login")
@@ -86,16 +94,13 @@ public class SystemController {
             subject.login(token);
         } catch (LockedAccountException e) {
             token.clear();
-            // return ResultUtil.error("用户已经被锁定不能登录，请联系管理员！");
+            return ResultUtil.error("用户已经被锁定不能登录，请联系管理员！");
         } catch (AuthenticationException e) {
             token.clear();
-            // return ResultUtil.error("用户名或者密码错误！");
+            return ResultUtil.error("用户名或者密码错误！");
         }
         // 更新最后登录时间
         userService.updateLastLoginTime((User) SecurityUtils.getSubject().getPrincipal());
-        // return ResultUtil.success("登录成功！");
-
-        System.out.println("登陆成功!");
-        return null;
+        return ResultUtil.success("登录成功！", SecurityUtils.getSubject().getPrincipal());
     }
 }

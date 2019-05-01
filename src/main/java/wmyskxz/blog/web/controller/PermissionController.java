@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.entity.Permission;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
@@ -23,7 +24,7 @@ import java.util.List;
  * @date:2019/03/01 - 08:42
  */
 @RestController// 返回JSOn
-@RequestMapping("/apis/permission")
+@RequestMapping("/apis/admin/")
 public class PermissionController {
 
     @Autowired UserService userService;
@@ -37,8 +38,7 @@ public class PermissionController {
             dataType = "String")})
     @PostMapping("/role")
     public ResponseVo addRole(@RequestParam String name, @RequestParam String description) {
-        roleService.add(name, description);
-        return ResultUtil.success("添加成功!");
+        return ResultUtil.success("添加成功!", roleService.add(name, description));
     }
 
     // 增加一条权限信息
@@ -51,14 +51,12 @@ public class PermissionController {
     @PostMapping("/permission")
     public ResponseVo addPermission(@RequestParam String name, @RequestParam String description,
                                     @RequestParam String url, @RequestParam String icon) {
-        System.out.println(name);
         Permission permission = new Permission();
         permission.setName(name);
         permission.setDescription(description);
         permission.setUrl(url);
         permission.setIcon(icon);
-        permissionService.add(permission);
-        return ResultUtil.success("添加成功!");
+        return ResultUtil.success("添加成功!", permissionService.add(permission));
     }
 
     // 给用户赋予角色
@@ -125,7 +123,8 @@ public class PermissionController {
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/role")
-    public PageResultVo listRoles(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public PageResultVo listRoles(@RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                  @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil.table(roleService.listAll(pageNum, pageSize), ConstCode.DEFAULT_NO_PAGING);
     }
 
@@ -138,7 +137,7 @@ public class PermissionController {
 
     // 查询所有权限信息
     @ApiOperation("查询所有权限信息")
-    @GetMapping("/permission/")
+    @GetMapping("/permission")
     public PageResultVo listPermissions() {
         return ResultUtil.table(permissionService.listAll(), ConstCode.DEFAULT_NO_PAGING);
     }
@@ -154,6 +153,6 @@ public class PermissionController {
     @ApiOperation("查询一个用户所拥有的权限信息")
     @GetMapping("/permission/user/{userId}")
     public PageResultVo listPermissionsByUserId(@PathVariable Long userId) {
-        return ResultUtil.table((List<?>) permissionService.listPermsByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
+        return ResultUtil.table(permissionService.listByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
     }
 }

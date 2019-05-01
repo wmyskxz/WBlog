@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
+import wmyskxz.blog.util.ConstCode;
 import wmyskxz.blog.util.ResultUtil;
 import wmyskxz.blog.web.service.NotifyService;
 import wmyskxz.blog.web.service.UserService;
@@ -43,8 +45,9 @@ public class NotifyController {
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/fans/{userId}")
-    public PageResultVo listFansByUserId(@PathVariable Long userId, @RequestParam int pageNum,
-                                         @RequestParam int pageSize) {
+    public PageResultVo listFansByUserId(@PathVariable Long userId,
+                                         @RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                         @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil.table(notifyService.listUserFansByUserId(userId, pageNum, pageSize),
                                 notifyService.countUserFansByUserId(userId));
     }
@@ -54,8 +57,9 @@ public class NotifyController {
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/follows/{userId}")
-    public PageResultVo listFollowsByUserId(@PathVariable Long userId, @RequestParam int pageNum,
-                                            @RequestParam int pageSize) {
+    public PageResultVo listFollowsByUserId(@PathVariable Long userId,
+                                            @RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                            @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil.table(notifyService.listUserFollowsByUserId(userId, pageNum, pageSize),
                                 notifyService.countUserFollowsByUserId(userId));
     }
@@ -63,8 +67,9 @@ public class NotifyController {
     // 查询某个用户的点赞通知信息
     @ApiOperation("查询某个用户的点赞通知信息")
     @GetMapping("/vote/{userId}")
-    public PageResultVo listVotesByUserId(@PathVariable Long userId, @RequestParam int pageNum,
-                                          @RequestParam int pageSize) {
+    public PageResultVo listVotesByUserId(@PathVariable Long userId,
+                                          @RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                          @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil.table(notifyService.listUserVotesByUserId(userId, pageNum, pageSize),
                                 notifyService.countUserVotesByUserId(userId));
     }
@@ -72,41 +77,43 @@ public class NotifyController {
     // 查询某个用户的关注通知消息
     @ApiOperation("查询某个用户的关注通知消息")
     @GetMapping("/follow/{userId}")
-    public PageResultVo listFollowsNotifyByUserId(@PathVariable Long userId, @RequestParam int pageNum,
-                                                  @RequestParam int pageSize) {
+    public PageResultVo listFollowsNotifyByUserId(@PathVariable Long userId,
+                                                  @RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                                  @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil.table(notifyService.listUserFollowNotifyByUserId(userId, pageNum, pageSize),
                                 notifyService.countUserFansByUserId(userId));
     }
 
-    // 某一个用户给某一篇博文点赞
-    @ApiOperation("某一个用户给某一篇博文点赞")
-    @PostMapping("/vote/{userId}/{blogId}")
-    public ResponseVo vote(@PathVariable Long userId, @PathVariable Long blogId) {
-        userService.vote(userId, blogId);
+    // 已读所有未读评论消息
+    @ApiOperation("已读所有未读评论消息")
+    @PostMapping("/{userId}/comment/readAll")
+    public ResponseVo readAllComments(@PathVariable Long userId) {
+        notifyService.readAllByUserIdAndType(userId, ConstCode.NOTIFY_COMMENT_TYPE);
         return ResultUtil.success("成功!");
     }
 
-    // 某一个用户取消对一篇博文的点赞
-    @ApiOperation("某一个用户取消对一篇博文的点赞")
-    @PostMapping("/unvote/{userId}/{blogId}")
-    public ResponseVo unVote(@PathVariable Long userId, @PathVariable Long blogId) {
-        userService.unVote(userId, blogId);
-        return ResultUtil.success("成功取消点赞");
+    // 已读所有未读私信消息
+    @ApiOperation("已读所有未读私信消息")
+    @PostMapping("/{userId}/message/readAll")
+    public ResponseVo readAllMessages(@PathVariable Long userId) {
+        notifyService.readAllByUserIdAndType(userId, ConstCode.NOTIFY_MESSAGE_TYPE);
+        return ResultUtil.success("成功!");
     }
 
-    // 某一个用户关注另一个用户
-    @ApiOperation("某一个用户关注另一个用户")
-    @PostMapping("/follow/{userId}/{followUserId}")
-    public ResponseVo follow(@PathVariable Long userId, @PathVariable Long followUserId) {
-        userService.follow(userId, followUserId);
-        return ResultUtil.success("关注成功!");
+    // 已读所有未读点赞消息
+    @ApiOperation("已读所有未读点赞消息")
+    @PostMapping("/{userId}/vote/readAll")
+    public ResponseVo readAllVotes(@PathVariable Long userId) {
+        notifyService.readAllByUserIdAndType(userId, ConstCode.NOTIFY_VOTE_TYPE);
+        return ResultUtil.success("成功!");
     }
 
-    // 某一个用户取消对一个用户的关注
-    @ApiOperation("某一个用户取消对一个用户的关注")
-    @PostMapping("/unfollow/{userId}/{followUserId}")
-    public ResponseVo unFollow(@PathVariable Long userId, @PathVariable Long followUserId) {
-        userService.unFollow(userId, followUserId);
-        return ResultUtil.success("成功取消关注");
+    // 已读所有未读关注消息
+    @ApiOperation("已读所有未读关注消息")
+    @PostMapping("/{userId}/follow/readAll")
+    public ResponseVo readAllFollows(@PathVariable Long userId) {
+        notifyService.readAllByUserIdAndType(userId, ConstCode.NOTIFY_FOLLOW_TYPE);
+        return ResultUtil.success("成功!");
     }
+
 }

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ResultUtil;
@@ -69,8 +70,8 @@ public class UserController {
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("")
-    public PageResultVo list(@RequestParam(defaultValue = "0") int pageNum,
-                             @RequestParam(defaultValue = "10") int pageSize) {
+    public PageResultVo list(@RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                             @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil.table(userService.listAll(pageNum, pageSize), userService.countAll());
     }
 
@@ -102,6 +103,9 @@ public class UserController {
                 out.write(file.getBytes());
                 out.flush();
                 out.close();
+
+                // 设置用户头像地址
+                userService.updateAvatarById(userId, "localhost/avatar/" + userId + "/avatar.jpg");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 return ResultUtil.success("上传失败," + e.getMessage());

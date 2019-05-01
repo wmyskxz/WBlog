@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ConstCode;
@@ -53,10 +54,8 @@ public class MessageController {
 
     // 查询某个用户的私信列表
     @ApiOperation("查询某个用户的私信列表")
-    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/{userId}")
-    public PageResultVo listByUserId(@PathVariable Long userId, @RequestParam int pageNum, @RequestParam int pageSize) {
+    public PageResultVo listByUserId(@PathVariable Long userId) {
         return ResultUtil.table(messageService.listByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
     }
 
@@ -66,7 +65,8 @@ public class MessageController {
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/{userId}/{counterpartId}")
     public PageResultVo listByCounterpartId(@PathVariable Long userId, @PathVariable Long counterpartId,
-                                            @RequestParam int pageNum, @RequestParam int pageSize) {
+                                            @RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                            @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil
                 .table(messageService.listMessageListByUserIdAndConterpartId(userId, counterpartId, pageNum, pageSize),
                        messageService.countByUserIdAndCounterpartId(userId, counterpartId));

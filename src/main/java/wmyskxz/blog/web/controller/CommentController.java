@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import wmyskxz.blog.config.PageConfig;
 import wmyskxz.blog.module.vo.base.PageResultVo;
 import wmyskxz.blog.module.vo.base.ResponseVo;
 import wmyskxz.blog.util.ConstCode;
@@ -40,11 +41,10 @@ public class CommentController {
     @ApiImplicitParams({@ApiImplicitParam(name = "userId", value = "评论者的id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "blogId", value = "评论的文章id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "content", value = "评论内容", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "userId", value = "评论者@的人的id,必须", required = true, dataType = "Long"),
+            @ApiImplicitParam(name = "atId", value = "评论者@的人的id,必须", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "blogerId", value = "博主id", required = true, dataType = "Long"),})
-    @PostMapping("/reply/{commentId}")
-    public ResponseVo replyComment(@PathVariable Long commentId, Long userId, Long blogId, String content, Long atId,
-                                   Long blogerId) {
+    @PostMapping("/reply/")
+    public ResponseVo replyComment(Long userId, Long blogId, String content, Long atId, Long blogerId) {
         commentService.reply(userId, blogId, content, atId, blogerId);
         return ResultUtil.success("回复成功!");
     }
@@ -69,7 +69,9 @@ public class CommentController {
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "开始页面", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "页面大小", required = true, dataType = "int")})
     @GetMapping("/user/{userId}")
-    public PageResultVo listAllByUserId(@PathVariable Long userId, int pageNum, int pageSize) {
+    public PageResultVo listAllByUserId(@PathVariable Long userId,
+                                        @RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                                        @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
         return ResultUtil
                 .table(commentService.listByUserId(userId, pageNum, pageSize), commentService.countByUserId(userId));
     }

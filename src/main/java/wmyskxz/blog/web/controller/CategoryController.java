@@ -28,9 +28,8 @@ public class CategoryController {
     @ApiImplicitParams({@ApiImplicitParam(name = "name", value = "分类名称", required = true, dataType = "String"),
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "Long"),})
     @PostMapping("")
-    public ResponseVo addCategory(CategoryVo categoryVo) {
-        categoryService.update(categoryVo);
-        return ResultUtil.success("添加成功!");
+    public ResponseVo addCategory(@RequestParam String name, @RequestParam Long userId) {
+        return ResultUtil.success("添加成功!", categoryService.add(name, userId));
     }
 
     // 删除一个分类
