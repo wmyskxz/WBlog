@@ -172,6 +172,7 @@ public class BlogServiceImpl implements BlogService {
 
         BlogInfoExample blogInfoExample = new BlogInfoExample();
         blogInfoExample.or().andUserIdEqualTo(userId).andIsRecommendEqualTo(true);
+        blogInfoExample.setOrderByClause("create_time DESC");// 设置按照创建时间降序排列
         PageHelper.startPage(pageNum, pageSize);// 只对下一次的查询生效
         List<BlogInfo> blogInfos = blogInfoMapper.selectByExample(blogInfoExample);
 
