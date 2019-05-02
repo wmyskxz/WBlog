@@ -53,6 +53,10 @@ public class PermissionServiceImpl implements PermissionService {
     @Transactional// 开启事务
     public void deleteById(Long permissionId) {
         permissionMapper.deleteByPrimaryKey(permissionId);
+        // 还要删除对应role_permission表中的东西
+        RolePermissionExample rolePermissionExample = new RolePermissionExample();
+        rolePermissionExample.or().andPermissionIdEqualTo(permissionId);
+        rolePermissionMapper.deleteByExample(rolePermissionExample);
     }
 
     @Override
