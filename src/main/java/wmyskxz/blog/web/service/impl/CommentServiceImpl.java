@@ -54,7 +54,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional// 开启事务
-    public void reply(Long userId, Long blogId, String content, Long atId, Long blogerId) {
+    public void reply(Long userId, Long blogId, String content, Long atId) {
+
+        // 前置操作,查询blogerId(之前的接口是把blogerId作为参数)
+        // 但是发现有了blogerId在前端不好取到传回来，并且有了blogId这个字段有些多余...
+        BlogInfo blogInfo = blogInfoMapper.selectByPrimaryKey(blogId);
+        Long blogerId = blogInfo.getUserId();
 
         // 1.先创建对应的通知消息
         Notify notify = new Notify();

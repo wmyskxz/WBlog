@@ -41,11 +41,10 @@ public class CommentController {
     @ApiImplicitParams({@ApiImplicitParam(name = "userId", value = "评论者的id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "blogId", value = "评论的文章id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "content", value = "评论内容", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "atId", value = "评论者@的人的id,必须", required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "blogerId", value = "博主id", required = true, dataType = "Long"),})
-    @PostMapping("/reply/")
-    public ResponseVo replyComment(Long userId, Long blogId, String content, Long atId, Long blogerId) {
-        commentService.reply(userId, blogId, content, atId, blogerId);
+            @ApiImplicitParam(name = "atId", value = "评论者@的人的id,必须", required = true, dataType = "Long"),})
+    @PostMapping("reply")
+    public ResponseVo replyComment(Long userId, Long blogId, String content, Long atId) {
+        commentService.reply(userId, blogId, content, atId);
         return ResultUtil.success("回复成功!");
     }
 

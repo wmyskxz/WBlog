@@ -29,9 +29,8 @@ public interface CommentService {
      * @param blogId
      * @param content
      * @param atId
-     * @param blogerId 博主id
      */
-    void reply(Long userId, Long blogId, String content, Long atId, Long blogerId);
+    void reply(Long userId, Long blogId, String content, Long atId);
 
     /**
      * 通过commentId删除一条评论消息(默认权限只有博主才有)
