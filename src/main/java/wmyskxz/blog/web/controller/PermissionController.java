@@ -150,6 +150,13 @@ public class PermissionController {
         return ResultUtil.table(permissionService.listByRoleId(roleId), ConstCode.DEFAULT_NO_PAGING);
     }
 
+    // 编辑一个用户时返回的角色信息
+    @ApiOperation("编辑一个用户时返回的角色信息")
+    @GetMapping("/user/{userId}/edit")
+    public PageResultVo editUser(@PathVariable Long userId) {
+        return ResultUtil.table(roleService.listByUserIdForEdit(userId), ConstCode.DEFAULT_NO_PAGING);
+    }
+
     // 编辑一个角色时返回的权限信息
     @ApiOperation("编辑一个角色时返回的权限信息")
     @GetMapping("/permission/{roleId}/edit")
@@ -162,5 +169,13 @@ public class PermissionController {
     @GetMapping("/permission/user/{userId}")
     public PageResultVo listPermissionsByUserId(@PathVariable Long userId) {
         return ResultUtil.table(permissionService.listByUserId(userId), ConstCode.DEFAULT_NO_PAGING);
+    }
+
+    // 修改角色权限
+    @ApiOperation("修改角色权限")
+    @PutMapping("/user/{userId}")
+    public ResponseVo updateUser(@PathVariable Long userId, @RequestParam Long[] roleIds) {
+        roleService.giveRoles(userId, roleIds);
+        return ResultUtil.success("成功修改!");
     }
 }

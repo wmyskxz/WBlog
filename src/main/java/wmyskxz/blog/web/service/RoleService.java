@@ -1,6 +1,7 @@
 package wmyskxz.blog.web.service;
 
 import wmyskxz.blog.module.entity.Role;
+import wmyskxz.blog.module.vo.AdminUserRoleVo;
 
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,8 @@ public interface RoleService {
 
     /**
      * 更新角色信息
-     *  @param name
+     *
+     * @param name
      * @param description
      * @param roleId
      * @param permissionIds
@@ -82,6 +84,14 @@ public interface RoleService {
      * @return
      */
     Set<String> listByUserId(Long userId);
+
+    /**
+     * 返回编辑时需要的角色信息
+     *
+     * @param userId
+     * @return
+     */
+    List<AdminUserRoleVo> listByUserIdForEdit(Long userId);
 
     /**
      * 通过角色登录账号来查询相应的角色信息

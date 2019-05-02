@@ -9,6 +9,7 @@ import wmyskxz.blog.module.dao.RoleMapper;
 import wmyskxz.blog.module.dao.RolePermissionMapper;
 import wmyskxz.blog.module.dao.UserRoleMapper;
 import wmyskxz.blog.module.entity.*;
+import wmyskxz.blog.module.vo.AdminUserRoleVo;
 import wmyskxz.blog.web.service.PermissionService;
 import wmyskxz.blog.web.service.RoleService;
 
@@ -170,6 +171,52 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional// 开启事务
     public List<Role> listByUsername(String username) {
-        return null;
+        return null;// 暂时未使用该功能
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<AdminUserRoleVo> listByUserIdForEdit(Long userId) {
+        List<AdminUserRoleVo> resultList = new LinkedList<>();
+
+        List<Role> roleList = listAll(Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+        List<Role> roleListByUserId = new LinkedList<>();
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.or().andUserIdEqualTo(userId);
+        List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
+        // 拼接数据
+        for (UserRole userRole : userRoleList) {
+            roleListByUserId.add(roleMapper.selectByPrimaryKey(userRole.getRoleId()));
+        }   // end for
+
+        AdminUserRoleVo adminUserRoleVo;
+        for (Role role : roleList) {
+            adminUserRoleVo = new AdminUserRoleVo();
+            adminUserRoleVo.setRoleId(role.getId());
+            adminUserRoleVo.setRoleName(role.getName());
+            adminUserRoleVo.setHave(isHave(roleListByUserId, role));
+
+            resultList.add(adminUserRoleVo);
+        }   // end for
+
+        return resultList;
+    }
+
+    /**
+     * 判断当前roleList集合中是否包含当前Role - id相同则返回true
+     *
+     * @param roleList
+     * @param role
+     * @return
+     */
+    private Boolean isHave(List<Role> roleList, Role role) {
+        Long roleId = role.getId();
+        for (Role r : roleList) {
+            if (r.getId().equals(roleId)) {
+                return true;
+            }
+        }   // end for:遍历完仍然没有找到
+        return false;
     }
 }

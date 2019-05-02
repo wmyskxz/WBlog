@@ -131,7 +131,9 @@ public class PermissionServiceImpl implements PermissionService {
         for (UserRole userRole : userRoleList) {
             List<Permission> permissions = listByRoleId(userRole.getRoleId());
             for (Permission permission : permissions) {
-                resultList.add(permission);
+                if (!isHave(resultList, permission)) {
+                    resultList.add(permission);
+                }
             }
         }   // end for
 
